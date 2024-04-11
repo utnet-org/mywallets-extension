@@ -19,7 +19,7 @@ export function askBackground(requestPayload: any): Promise<any> {
     log("askBackground ", JSON.stringify(requestPayload));
     const timeout = setTimeout(() => {
       return reject(Error("askBackground timeout"));
-    }, 30000);
+    }, 45000);
     chrome.runtime.sendMessage(requestPayload, function (response) {
       clearTimeout(timeout);
       //-- DEBUG

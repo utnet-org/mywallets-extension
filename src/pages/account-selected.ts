@@ -381,10 +381,11 @@ export function getKnownNEP141Contracts(): PopupItem[] {
   } else {
     return [
       { text: "stNEAR - meta-pool.near", value: "meta-pool.near" },
-      { text: "$META - meta-token.near", value: "meta-token.near" },
+      { text: "mpDAO - mpdao-token.near", value: "mpdao-token.near" },
       { text: "USDT - usdt.tether-token.near", value: "usdt.tether-token.near" },
       { text: "USDC - Circle", value: "17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1" },
       { text: "WETH - Wrapped Ether", value: "c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.factory.bridge.near" },
+      { text: "SWEAT", value: "token.sweat" },
       { text: "SOL.Allbridge - SOl Allbridge", value: "sol.token.a11bd.near" },
       { text: "wNEAR - wrapped near", value: "wrap.near" },
       { text: "REF - ref.finance", value: "token.v2.ref-finance.near" },
@@ -400,7 +401,16 @@ export function getKnownNEP141Contracts(): PopupItem[] {
       { text: "BANANA - berryclub.ek.near", value: "berryclub.ek.near" },
       { text: "DBIO - dbio.near", value: "dbio.near" },
       { text: "OCT - Octopus Network (bridged)", value: "f5cfbc74057c610c8ef151a439252680ac68c6dc.factory.bridge.near" },
+      { text: "$META - meta-token.near", value: "meta-token.near" },
       { text: "USN", value: "usn" },
+      { text: "LINEAR", value: "linear-protocol.near" },
+      { text: "WALC", value: "walc.near" },
+
+
+
+
+
+      
 
     ]
   }

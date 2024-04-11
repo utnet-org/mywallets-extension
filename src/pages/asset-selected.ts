@@ -540,14 +540,14 @@ async function LiquidUnstakeOk() {
   }
 }
 
-async function addMetaAsset(amount: number) {
-  let metaAsset = selectedAccountData.accountInfo.assets.find(
-    (i) => i.symbol == "META" || i.symbol == "$META"
-  );
-  if (!metaAsset) {
-    metaAsset = await addAssetToken(activeNetworkInfo.liquidStakingGovToken);
-  }
-}
+// async function addMetaAsset(amount: number) {
+//   let metaAsset = selectedAccountData.accountInfo.assets.find(
+//     (i) => i.symbol == "META" || i.symbol == "$META"
+//   );
+//   if (!metaAsset) {
+//     metaAsset = await addAssetToken(activeNetworkInfo.liquidStakingGovToken);
+//   }
+// }
 
 async function restakeOkClicked() {
   d.showWait();
