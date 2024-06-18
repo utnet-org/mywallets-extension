@@ -100,7 +100,12 @@ export async function queryAccount(accountId: string): Promise<StateResult> {
 
 //-------------------------------
 export function access_key(accountId: string, publicKey: string): Promise<TX.AccessKey> {
-    return jsonRpcQuery(`access_key/${accountId}/${publicKey}`) as Promise<any>
+    return jsonRpcQuery({
+        "request_type": "view_access_key",
+        "finality": "final",
+        "account_id": accountId,
+        "public_key": publicKey}
+    ) as Promise<any>
 };
 
 //-------------------------------
