@@ -14,7 +14,7 @@ import { FinalExecutionOutcome, FinalExecutionStatus } from "./near-types.js";
 
 
 //---------------------------
-//-- Utility PROTOCOL RPC CALLS
+//-- Utility RPC CALLS
 //---------------------------
 
 //--helper fn
@@ -229,7 +229,7 @@ export async function signTransaction2(accessKey: any, actions: TX.Action[], sig
 export function sendSignedTransaction(signedTransaction: TX.SignedTransaction): Promise<FinalExecutionOutcome> {
     const borshEncoded = signedTransaction.encode();
     const b64EncodedString = encodeBase64(borshEncoded)
-    return jsonRpc('broadcast_tx_commit', [b64EncodedString]) as Promise<FinalExecutionOutcome>
+    return jsonRpc('send_tx', [b64EncodedString]) as Promise<FinalExecutionOutcome>
 };
 
 

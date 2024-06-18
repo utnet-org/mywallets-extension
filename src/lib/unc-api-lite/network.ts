@@ -26,7 +26,7 @@ export const NetworkList:NetworkInfo[] = [
   },
 
   { name: "local", rootAccount: "local", displayName: "Local Network", color: "red", 
-    rpc: "http://127.0.0.1/rpc", explorerUrl: "http://127.0..0.1/explorer/", NearWebWalletUrl:"http://127.0..0.1/wallet/",  
+    rpc: "http://127.0.0.1:3030", explorerUrl: "http://127.0.0.1/explorer/", NearWebWalletUrl:"http://127.0..0.1/wallet/",  
     liquidStakingContract: "meta.pool.local", liquidStakingGovToken: "token.meta.pool.local",
   },
 ];
