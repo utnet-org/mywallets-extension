@@ -16,12 +16,12 @@ export type NetworkInfo = {
 export const NetworkList:NetworkInfo[] = [
 
   { name: "mainnet", rootAccount: "unc", displayName: "Utility Mainnet", color: "green", 
-      rpc: "https://unc-test.jongun2038.win/", explorerUrl: "https://explorer.near.org/", NearWebWalletUrl:"https://wallet.near.org/",
+      rpc: "https://unc-test.jongun2038.win/", explorerUrl: "https://explorer.xx.org/", NearWebWalletUrl:"https://wallet.xx.org/",
       liquidStakingContract: "meta-pool.near", liquidStakingGovToken: "meta-token.near",
   },
 
   { name: "testnet", rootAccount: "testnet", displayName: "Utility Testnet", color: "yellow", 
-      rpc: "https://unc-test.jongun2038.win/", explorerUrl: "https://explorer.testnet.near.org/", NearWebWalletUrl:"https://wallet.testnet.near.org/", 
+      rpc: "https://unc-test.jongun2038.win/", explorerUrl: "https://explorer.testnet.xx.org/", NearWebWalletUrl:"https://wallet.testnet.xx.org/", 
       liquidStakingContract: "meta-v2.pool.testnet", liquidStakingGovToken: "token.meta.pool.testnet",
   },
 

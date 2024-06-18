@@ -294,7 +294,7 @@ export async function usdPriceReady() {
     //   }
     //   else if (Pages.lastSelectedAsset.symbol == "STAKED"
     //     || Pages.lastSelectedAsset.symbol == "UNSTAKED"
-    //     || Pages.lastSelectedAsset.symbol == "wNEAR"
+    //     || Pages.lastSelectedAsset.symbol == "wUNC"
     //   ) {
     //     assetUsdValue = Pages.lastSelectedAsset.balance * nearDollarPrice;
     //   }
@@ -359,18 +359,17 @@ function addClicked() {
 export function getKnownNEP141Contracts(): PopupItem[] {
   if (activeNetworkInfo.name == "testnet") {
     return [
-      { text: "stNEAR - meta-v2.pool.testnet", value: "meta-v2.pool.testnet" },
+      { text: "wUNC - meta-v2.pool.testnet", value: "meta-v2.pool.testnet" },
       { text: "$META - token.meta.pool.testnet", value: "token.meta.pool.testnet" },
       { text: "CHDR - token.cheddar.testnet", value: "token.cheddar.testnet" },
     ]
   } else {
     return [
-      { text: "stNEAR - meta-pool.near", value: "meta-pool.near" },
+      { text: "stUNC - meta-pool.near", value: "meta-pool.near" },
       { text: "$META - meta-token.near", value: "meta-token.near" },
-      { text: "REF - ref.finance", value: "token.v2.ref-finance.near" },
       { text: "xREF - ref.finance", value: "xtoken.ref-finance.near" },
       { text: "Paras - token.paras.near", value: "token.paras.near" },
-      { text: "wNEAR - wrap.near", value: "wrap.near" },
+      { text: "wUNC - wrap.near", value: "wrap.near" },
       { text: "nWBTC- (bridged)", value: "2260fac5e5542a773aa44fbcfedf7c193bc2c599.factory.bridge.near" },
       { text: "nUSDT- (bridged)", value: "dac17f958d2ee523a2206206994597c13d831ec7.factory.bridge.near" },
       { text: "nUSDC- (bridged)", value: "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near" },
@@ -379,9 +378,6 @@ export function getKnownNEP141Contracts(): PopupItem[] {
       { text: "nLINK- (bridged)", value: "514910771af9ca656af840dff83e8264ecf986ca.factory.bridge.near" },
       { text: "BANANA - berryclub.ek.near", value: "berryclub.ek.near" },
       { text: "DBIO - dbio.near", value: "dbio.near" },
-      { text: "OCT - Octopus Network (bridged)", value: "f5cfbc74057c610c8ef151a439252680ac68c6dc.factory.bridge.near" },
-      { text: "USN", value: "usn" },
-
     ]
   }
 }
@@ -491,7 +487,7 @@ export function getUsdValue(asset: Asset): string {
 
   else if (asset.symbol == "STAKED"
     || asset.symbol == "UNSTAKED"
-    || asset.symbol == "wNEAR"
+    || asset.symbol == "wUNC"
   ) {
     assetUsdValue = asset.balance * nearDollarPrice;
   }
