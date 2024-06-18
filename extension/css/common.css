@@ -179,7 +179,7 @@ h5 {
 
 /* add (U) */
 .balance:after {
-  content     : "\0055";
+  content     : "\24B8";
   /*content   : "©";*/
   padding-left: 0.15em;
   font-size   : 12px;
