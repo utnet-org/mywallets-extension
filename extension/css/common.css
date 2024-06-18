@@ -177,9 +177,9 @@ h5 {
   font-size          : 12px;
 }
 
-/* add (N) */
+/* add (U) */
 .balance:after {
-  content     : "\24c3";
+  content     : "\0055";
   /*content   : "©";*/
   padding-left: 0.15em;
   font-size   : 12px;
