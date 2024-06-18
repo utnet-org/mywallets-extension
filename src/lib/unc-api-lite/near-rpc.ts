@@ -85,12 +85,11 @@ result: {
 
 export async function queryAccount(accountId: string): Promise<StateResult> {
     try {
-        const params = {
+        return await jsonRpcQuery({
             request_type: "view_account",
             finality: "final",
             account_id: accountId
-        };
-        return await jsonRpcQuery("account", params) as Promise<StateResult>
+        }) as Promise<StateResult>
     }
     catch (ex) {
         //intercept and make err message better for "account not found"
@@ -111,7 +110,13 @@ export function viewRaw(contractId: string, method: string, params?: any): Promi
         const asArr = Uint8ArrayFromString(JSON.stringify(params))
         encodedParams = bs58.encode(asArr);
     }
-    return jsonRpcQuery("call/" + contractId + "/" + method, encodedParams);
+    return jsonRpcQuery({
+            "request_type": "call_function",
+            "finality": "final",
+            "account_id": contractId,
+            "method_name": method,
+            "args_base64": encodedParams
+      });
 }
 export async function view(contractId: string, method: string, params?: any): Promise<any> {
     const data = await viewRaw(contractId, method, params);
