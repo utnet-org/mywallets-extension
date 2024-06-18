@@ -160,7 +160,7 @@ type Unsubscribe = () => void;
 
 const DEFAULT_NETWORK = {
     networkId: "mainnet",
-    nodeUrl: "https://rpc.mainnet.near.org"
+    nodeUrl: "https://unc-test.jongun2038.win"
 }
 
 interface Wallet {
@@ -209,9 +209,7 @@ async function script() {
 async function supportsNetwork(networkId: string): Promise<boolean> {
     return [
         "mainnet",
-        "guildnet",
         "testnet",
-        "betanet",
         "local"
     ].includes(networkId)
 }

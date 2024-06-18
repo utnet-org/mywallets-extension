@@ -1,7 +1,7 @@
 
 import { log } from "../../log.js";
 
-let rpcUrl: string = "https://rpc.mainnet.near.org/"
+let rpcUrl: string = "https://unc-test.jongun2038.win/"
 
 export function setRpcUrl(newUrl: string) {
     rpcUrl = newUrl;
