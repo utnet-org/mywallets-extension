@@ -2,7 +2,7 @@ import * as d from "../util/document.js";
 import * as c from "../util/conversions.js";
 
 import * as searchAccounts from "../util/search-accounts.js";
-import { isValidAccountID } from "../lib/near-api-lite/utils/valid.js";
+import { isValidAccountID } from "../lib/unc-api-lite/utils/valid.js";
 import * as Pages from "../pages/main.js";
 
 import { Account, newAccount } from "../structs/account-info.js";
@@ -20,7 +20,7 @@ import {
   askBackgroundSetAccount,
 } from "../askBackground.js";
 
-import type { NetworkInfo } from "../lib/near-api-lite/network.js";
+import type { NetworkInfo } from "../lib/unc-api-lite/network.js";
 import { ExtendedAccountData } from "../extendedAccountData.js";
 import { hamb } from "../index.js";
 

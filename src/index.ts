@@ -1,6 +1,6 @@
 import * as d from "./util/document.js";
 import * as Main from "./pages/main.js";
-import { NetworkList } from "./lib/near-api-lite/network.js";
+import { NetworkList } from "./lib/unc-api-lite/network.js";
 
 import { addListeners as CreateUser_addListeners } from "./pages/create-pass.js";
 import { addListeners as ChangePass_addListeners } from "./pages/change-pass.js";
@@ -24,10 +24,10 @@ import {
   askBackgroundSetNetwork,
   passMsgToBackground,
 } from "./askBackground.js";
-import { functionCall } from "./lib/near-api-lite/transaction.js";
-import { isValidEmail } from "./lib/near-api-lite/utils/valid.js";
+import { functionCall } from "./lib/unc-api-lite/transaction.js";
+import { isValidEmail } from "./lib/unc-api-lite/utils/valid.js";
 
-import type { NetworkInfo } from "./lib/near-api-lite/network.js";
+import type { NetworkInfo } from "./lib/unc-api-lite/network.js";
 import { hideOkCancel, OkCancelInit } from "./util/okCancel.js";
 import { closePopupList, initPopupHandlers } from "./util/popup-list.js";
 import { log, logEnabled } from "./lib/log.js";

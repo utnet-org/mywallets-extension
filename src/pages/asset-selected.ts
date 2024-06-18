@@ -15,7 +15,7 @@ import {
 import {
   isValidAccountID,
   CheckValidAmount,
-} from "../lib/near-api-lite/utils/valid.js";
+} from "../lib/unc-api-lite/utils/valid.js";
 import * as d from "../util/document.js";
 import {
   disableOKCancel,

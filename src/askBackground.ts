@@ -1,12 +1,12 @@
 import type { StateStruct, SecureOptions } from "./structs/state-structs.js";
-import { NetworkInfo } from "./lib/near-api-lite/network.js";
+import { NetworkInfo } from "./lib/unc-api-lite/network.js";
 
 import {
   BatchAction,
   BatchTransaction,
   FunctionCall,
   Transfer,
-} from "./lib/near-api-lite/batch-transaction.js";
+} from "./lib/unc-api-lite/batch-transaction.js";
 import { log } from "./lib/log.js";
 import { GContact } from "./data/contact.js";
 import { Account } from "./structs/account-info.js";

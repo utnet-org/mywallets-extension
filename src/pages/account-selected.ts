@@ -8,15 +8,15 @@ import * as StakingPool from "../contracts/staking-pool.js";
 import {
   isValidAccountID,
   CheckValidAmount,
-} from "../lib/near-api-lite/utils/valid.js";
+} from "../lib/unc-api-lite/utils/valid.js";
 import {
   checkSeedPhrase,
   parseSeedPhraseAsync,
-} from "../lib/near-api-lite/utils/seed-phrase.js";
+} from "../lib/unc-api-lite/utils/seed-phrase.js";
 import {
   CurveAndArrayKey,
   KeyPairEd25519,
-} from "../lib/near-api-lite/utils/key-pair.js";
+} from "../lib/unc-api-lite/utils/key-pair.js";
 
 import { LockupContract } from "../contracts/LockupContract.js";
 import {
@@ -44,7 +44,7 @@ import {
 import {
   BatchTransaction,
   DeleteAccountToBeneficiary,
-} from "../lib/near-api-lite/batch-transaction.js";
+} from "../lib/unc-api-lite/batch-transaction.js";
 
 import { show as AccountPages_show } from "./main.js";
 import { show as AssetSelected_show } from "./asset-selected.js";
@@ -82,7 +82,7 @@ import {
   UNSTAKE_DEFAULT_SVG,
   WITHDRAW_SVG,
 } from "../util/svg_const.js";
-import { NetworkInfo } from "../lib/near-api-lite/network.js";
+import { NetworkInfo } from "../lib/unc-api-lite/network.js";
 import { autoRefresh} from "../index.js";
 import { closePopupList, popupComboConfigure, PopupItem, popupListOpen } from "../util/popup-list.js";
 import { tryAsyncRefreshAccountInfoLastBalance, ExtendedAccountData } from "../extendedAccountData.js";

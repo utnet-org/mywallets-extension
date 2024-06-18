@@ -1,6 +1,6 @@
 import * as secret from "../lib/naclfast-secret-box/nacl-fast.js";
 import { sha256Async } from "../lib/crypto-lite/crypto-primitives-browser.js";
-import * as Network from "../lib/near-api-lite/network.js";
+import * as Network from "../lib/unc-api-lite/network.js";
 import {
     localStorageRemove,
     recoverFromLocalStorage,
@@ -21,9 +21,9 @@ import {
     Uint8ArrayFromString,
 } from "../lib/crypto-lite/encode.js";
 
-import type { NetworkInfo } from "../lib/near-api-lite/network.js";
+import type { NetworkInfo } from "../lib/unc-api-lite/network.js";
 import type { StateStruct } from "../structs/state-structs.js";
-import { isValidEmail } from "../lib/near-api-lite/utils/valid.js";
+import { isValidEmail } from "../lib/unc-api-lite/utils/valid.js";
 import { GContact } from "../data/contact.js";
 //import { activeNetworkInfo } from "../index.js";
 import { yton } from "../util/conversions.js";
