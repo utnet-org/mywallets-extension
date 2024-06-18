@@ -13,13 +13,6 @@ import { encodeHex } from "../lib/crypto-lite/encode.js";
 
 const IMPORT_ACCOUNT = "import-account"
 
-async function createAccountClicked(ev: Event) {
-  chrome.windows.create({
-    url: activeNetworkInfo.NearWebWalletUrl + "create",
-    state: "maximized"
-  });
-}
-
 function importAccountClicked(ev: Event) {
   d.showPage(IMPORT_ACCOUNT);
   d.onClickId("import-existing-account-back-to-account", backToMainPageClicked);
@@ -91,9 +84,7 @@ async function createImplicitAccount_Step3() {
 // on document load
 export function addListeners() {
 
-
   d.onClickId("option-import", importAccountClicked);
-  d.onClickId("option-create", createAccountClicked);
   d.onClickId("option-create-implicit", createImplicitAccountClicked);
 
 }

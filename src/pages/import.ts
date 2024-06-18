@@ -318,10 +318,6 @@ export async function onNetworkChanged() {
   d.byId(NET_ROOT).innerText = "." + activeNetworkInfo.rootAccount; //account name label
 }
 
-function createAccountClicked(ev: Event) {
-  //d.showPage(CREATE_ACCOUNT)
-}
-
 // on document load
 export async function addListeners() {
   //const accountName = new d.El("input#account-name");
@@ -336,7 +332,6 @@ export async function addListeners() {
   accountGetMessage = new d.El("#account-get-message");
 
   d.onClickId("option-import", importExistingAccount);
-  d.onClickId("option-create", createAccountClicked);
   d.onEnterKey("search-account-name", searchClicked);
 
   //accountName.onInput(accountNameInput);
