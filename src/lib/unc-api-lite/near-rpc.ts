@@ -85,7 +85,12 @@ result: {
 
 export async function queryAccount(accountId: string): Promise<StateResult> {
     try {
-        return await jsonRpcQuery("account/" + accountId) as Promise<StateResult>
+        const params = {
+            request_type: "view_account",
+            finality: "final",
+            account_id: accountId
+        };
+        return await jsonRpcQuery("account", params) as Promise<StateResult>
     }
     catch (ex) {
         //intercept and make err message better for "account not found"

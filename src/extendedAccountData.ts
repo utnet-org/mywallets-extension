@@ -125,7 +125,7 @@ export async function asyncRefreshAccountInfoLastBalance(accName: string, info: 
   let stateResultYoctos;
   try {
     stateResultYoctos = await askBackground({
-      code: "query-near-account",
+      code: "query-unc-account",
       accountId: accName,
     });
   } catch (ex) {

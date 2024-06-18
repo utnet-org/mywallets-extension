@@ -31,7 +31,7 @@ export async function getLockupContract(
 export async function checkIfAccountExists(accName: string): Promise<boolean> {
   try {
     await askBackground({
-      code: "query-near-account",
+      code: "query-unc-account",
       accountId: accName,
     });
     return true;

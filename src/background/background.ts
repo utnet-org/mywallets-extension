@@ -543,7 +543,7 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
       //check access-key exists and get nonce
       return near.access_key(msg.accountId, msg.publicKey);
     }
-    case "query-near-account": {
+    case "query-unc-account": {
       //check access-key exists and get nonce
       return near.queryAccount(msg.accountId);
     }

@@ -120,7 +120,7 @@ export async function show(
   d.byId("asset-remove").classList.remove("hidden"); // shown in all cases
 
   switch (asset_selected.symbol) {
-    case "STNEAR": {
+    case "STUNC": {
       d.byId("asset-send").classList.remove("hidden");
       d.byId("asset-receive").classList.remove("hidden");
       d.byId("asset-stake").classList.remove("hidden");
@@ -703,8 +703,8 @@ async function createOrUpdateAssetUnstake(poolAccInfo: any, amount: number) {
       );
       setAssetBalanceYoctos(unstakedAsset, c.ntoy(amountToUnstake));
       selectedAccountData.accountInfo.assets.push(unstakedAsset);
-    } else if (asset_selected.symbol == "STNEAR") {
-      // Can't unstake STNEAR if there's no STNEAR asset
+    } else if (asset_selected.symbol == "STUNC") {
+      // Can't unstake STUNC if there's no STUNC asset
       // this is unreachable code
     }
   }

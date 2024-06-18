@@ -288,7 +288,7 @@ export async function usdPriceReady() {
   if (Main.lastSelectedAsset) {
     let assetUsdValue = getUsdValue(Main.lastSelectedAsset)
     // if (Pages.lastSelectedAsset.balance != undefined) {
-    //   if (Pages.lastSelectedAsset.symbol == "STNEAR") {
+    //   if (Pages.lastSelectedAsset.symbol == "STUNC") {
     //     await getNarwalletsMetrics()
     //     if (narwalletsMetrics) assetUsdValue = Pages.lastSelectedAsset.balance * narwalletsMetrics.st_near_price * nearDollarPrice;
     //   }
@@ -478,7 +478,7 @@ type DivIdField = { divId: string };
 export function getUsdValue(asset: Asset): string {
   if (!nearDollarPrice || !asset.balance) return "";
   let assetUsdValue;
-  if (asset.symbol == "STNEAR" && narwalletsMetrics) {
+  if (asset.symbol == "STUNC" && narwalletsMetrics) {
     assetUsdValue = asset.balance * narwalletsMetrics.st_near_price * nearDollarPrice;
   }
   else if (asset.symbol == "$META" && narwalletsMetrics) {
@@ -1156,7 +1156,7 @@ async function performStake() {
         let asset = new Asset(
           newStakingPool,
           "stake",
-          stakeTabSelected == 1 ? "STNEAR" : "STAKED",
+          stakeTabSelected == 1 ? "STUNC" : "STAKED",
           stakeTabSelected == 1 ? STNEAR_SVG : STAKE_DEFAULT_SVG
         );
         setAssetBalanceYoctos(asset, newBalance)

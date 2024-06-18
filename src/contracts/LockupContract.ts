@@ -63,7 +63,7 @@ export class LockupContract {
 
     try {
       let stateResultYoctos = await askBackground({
-        code: "query-near-account",
+        code: "query-unc-account",
         accountId: this.contractAccount,
       });
       this.accountInfo.lastBalance = c.yton(stateResultYoctos.amount)
