@@ -380,7 +380,7 @@ function reflectTransfer(msg: any) {
               }
               break;
 
-            case "transfer": { // NEAR native
+            case "transfer": { // Utility native
               const sender = signerId;
               const receiver = msg.tx.receiver;
               const amountY = item.attached;

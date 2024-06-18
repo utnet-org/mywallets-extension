@@ -15,7 +15,7 @@ export type NetworkInfo = {
   
 export const NetworkList:NetworkInfo[] = [
 
-  { name: "mainnet", rootAccount: "near", displayName: "NEAR Mainnet", color: "green", 
+  { name: "mainnet", rootAccount: "near", displayName: "Utility Mainnet", color: "green", 
       rpc: "https://rpc.mainnet.near.org/", explorerUrl: "https://explorer.near.org/", NearWebWalletUrl:"https://wallet.near.org/",
       liquidStakingContract: "meta-pool.near", liquidStakingGovToken: "meta-token.near",
   },
@@ -25,12 +25,12 @@ export const NetworkList:NetworkInfo[] = [
       liquidStakingContract: "meta.pool.guildnet", liquidStakingGovToken: "token.meta.pool.guildnet",
   },
 
-  { name: "testnet", rootAccount: "testnet", displayName: "NEAR Testnet", color: "yellow", 
+  { name: "testnet", rootAccount: "testnet", displayName: "Utility Testnet", color: "yellow", 
       rpc: "https://rpc.testnet.near.org/", explorerUrl: "https://explorer.testnet.near.org/", NearWebWalletUrl:"https://wallet.testnet.near.org/", 
       liquidStakingContract: "meta-v2.pool.testnet", liquidStakingGovToken: "token.meta.pool.testnet",
   },
 
-  { name: "betanet", rootAccount: "betanet", displayName: "NEAR Betanet", color: "violet", 
+  { name: "betanet", rootAccount: "betanet", displayName: "Utility Betanet", color: "violet", 
     rpc: "https://rpc.betanet.near.org/", explorerUrl: "https://explorer.betanet.near.org/", NearWebWalletUrl:"https://wallet.betanet.near.org/",  
     liquidStakingContract:"meta.pool.betanet", liquidStakingGovToken: "token.meta.pool.betanet",
   },

@@ -7,7 +7,7 @@ export type GetAccountInfoResult = {
     available: U128String,
     /// The amount of stNEAR owned (the shares owned)
     st_near: U128String,
-    /// The amount of NEAR owner (st_near * stNEAR_price)
+    /// The amount of Utility owner (st_near * stNEAR_price)
     valued_st_near: U128String,
     /// The amount of rewards (rewards = total_staked - stnear_amount) and (total_owned = stnear + rewards)
     unstaked: U128String,

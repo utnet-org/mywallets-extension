@@ -1,5 +1,5 @@
 //------------------------------------------------
-// user NEAR accounts info type
+// user Utility accounts info type
 // these are types and not classes because when serializing and deserializing to SecureState
 // all data is converted to POJO. So to avoid re-hydrating issues, let's use POJOs and static functions 
 

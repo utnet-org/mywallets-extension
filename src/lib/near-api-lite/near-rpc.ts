@@ -14,7 +14,7 @@ import { FinalExecutionOutcome, FinalExecutionStatus } from "./near-types.js";
 
 
 //---------------------------
-//-- NEAR PROTOCOL RPC CALLS
+//-- Utility PROTOCOL RPC CALLS
 //---------------------------
 
 //--helper fn

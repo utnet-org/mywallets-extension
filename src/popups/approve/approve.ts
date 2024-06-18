@@ -138,7 +138,7 @@ function displaySingleTransactionParams(inx: number, params: any) {
     let toAdd: TxInfo = {
       action: `${action.methodName}(${JSON.stringify(action.args)})`,
       attached: (action.params.deposit != "0" && action.params.deposit != "1") ?
-        `with <span class="near">${removeDecZeroes(ytonFull(action.params.deposit))}</span> attached NEAR` : ""
+        `with <span class="near">${removeDecZeroes(ytonFull(action.params.deposit))}</span> attached Utility` : ""
     }
 
     switch (action.type) {
@@ -148,7 +148,7 @@ function displaySingleTransactionParams(inx: number, params: any) {
 
       case "Transfer":
         toAdd.action = ""
-        toAdd.attached = `transfer <span class="near">${ytonString(action.params.deposit)}</span> NEAR`
+        toAdd.attached = `transfer <span class="near">${ytonString(action.params.deposit)}</span> Utility`
         break;
 
       default:

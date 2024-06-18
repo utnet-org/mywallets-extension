@@ -14,7 +14,7 @@ export class ExtendedAccountData {
   typeFull: string; //full-type + note
   accountInfo: Account;
   total: number | undefined = undefined; //lastBalance+inThePool
-  totalUSD: number | undefined = undefined; //lastBalance+inThePool * NEAR price
+  totalUSD: number | undefined = undefined; //lastBalance+inThePool * Utility price
   unlockedOther: number = 0;
   available: number = 0;
 
@@ -89,7 +89,7 @@ export class ExtendedAccountData {
     try {
       if (this.accountInfo.type == "lock.c") {
         const locked = await askBackgroundViewMethod(this.name, "get_locked_amount", {})
-        this.accountInfo.lockedOther = yton(locked) + 35 // 35 NEAR are locked in lock-accounts to backup storage
+        this.accountInfo.lockedOther = yton(locked) + 35 // 35 Utility are locked in lock-accounts to backup storage
       }
     } catch (ex) {
       console.error(ex)

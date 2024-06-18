@@ -46,7 +46,7 @@ export function formatJSONErr(obj: any): any {
             const parts = matches.split(" ")
             const yoctosString = parts.pop() || ""
             if (yoctosString.length >= 20) {
-                // convert to NEAR
+                // convert to Utility
                 text = text.replace(new RegExp(yoctosString, "g"), ytonFull(yoctosString))
             }
         }

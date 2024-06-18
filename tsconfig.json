@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Node 12+es2020",
+  "display": "Node 18+es2020",
   "compilerOptions": {
     "lib": [
       "dom",

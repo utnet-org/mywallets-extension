@@ -583,7 +583,7 @@ function renderSelectedAccountHeader() {
       <div class="accountdetscomment">
         {accountInfo.note}
       </div>
-      <div class="assetdetcontract">NEAR
+      <div class="assetdetcontract">Utility
       </div>
       <div class="accountdetsbalance balance">{total}</div>
       <div class="accountdetsfiat hidden">
@@ -815,7 +815,7 @@ function popupListItemClicked(text: string, value: string) {
 
 //----------------------
 /**
- * Send NEAR native coin, pre-confirmation
+ * Send Utility native coin, pre-confirmation
  */
 async function sendOKClicked() {
   try {
@@ -860,7 +860,7 @@ async function sendOKClicked() {
 
 //----------------------
 /**
- * Send NEAR native execute
+ * Send Utility native execute
  */
 async function performSend() {
   try {
@@ -1077,7 +1077,7 @@ async function performStake() {
     //const amountToStake = info.lastBalance - info.staked - 36
     CheckValidAmount(amountToStake)
     if (liquidStake && amountToStake < 1) {
-      throw Error("Stake at least 1 NEAR");
+      throw Error("Stake at least 1 Utility");
     }
 
     let poolAccInfo = {
@@ -1190,7 +1190,7 @@ async function performStake() {
     if (selectedAccountData.total) selectedAccountData.total -= amountToStake;
     await refreshSaveSelectedAccount();
 
-    d.showSuccess(`Staked ${amountToStake} NEAR`);
+    d.showSuccess(`Staked ${amountToStake} Utility`);
     hideOkCancel();
     switchToAssetsSupbage();
   } catch (ex) {
@@ -1225,7 +1225,7 @@ async function performLockupContractStake() {
     CheckValidAmount(amountToStake)
     const liquidStake = stakeTabSelected == 1;
     if (liquidStake && amountToStake < 1) {
-      throw Error("Stake at least 1 NEAR");
+      throw Error("Stake at least 1 Utility");
     }
 
     const lc = new LockupContract(info);
@@ -1252,7 +1252,7 @@ async function performLockupContractStake() {
     //refresh status
     await refreshSaveSelectedAccount();
 
-    d.showSuccess(`Staked ${amountToStake} NEAR`);
+    d.showSuccess(`Staked ${amountToStake} Utility`);
     switchToAssetsSupbage();
   } catch (ex) {
     d.showErr(ex.message);

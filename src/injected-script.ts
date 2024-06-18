@@ -50,7 +50,7 @@ interface FinalExecutionOutcome {
 }
 
 // From https://github.com/near/NEPs/blob/master/specs/Standards/Wallets/InjectedWallets.md
-/************* Start extracted from near-api-js **************/
+/************* Start extracted from web3-api-js **************/
 
 declare class FunctionCallPermission {
     allowance?: BigInt;
@@ -111,7 +111,7 @@ declare class PublicKey {
     verify(message: Uint8Array, signature: Uint8Array): boolean;
 }
 
-/************* Finish extracted from near-api-js **************/
+/************* Finish extracted from web3-api-js **************/
 interface Account {
     accountId: string;
     publicKey: PublicKey;
@@ -122,7 +122,7 @@ interface Network {
     nodeUrl: string;
 }
 
-// Extracted from near-api-js
+// Extracted from web3-api-js
 
 
 interface SignInParams {

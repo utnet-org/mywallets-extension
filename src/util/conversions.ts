@@ -22,7 +22,7 @@ export function nToYD(near: number, decimals: number): string {
 }
 
 /**
- * returns string representing NEAR with thousands separators, and 5 decimal places
+ * returns string representing Utility with thousands separators, and 5 decimal places
  * @param {string} yoctos 
  */
 export function ytonString(yoctos: string): string {
@@ -60,7 +60,7 @@ export function yton(yoctos: string): number {
 
 
 /**
- * Formats a number in NEAR to a string with commas and 5 decimal places
+ * Formats a number in Utility to a string with commas and 5 decimal places
  * @param {number} n 
  */
 function toStringDecSimple(n: number, decimals: number = 5) {
@@ -68,7 +68,7 @@ function toStringDecSimple(n: number, decimals: number = 5) {
     return textNoDec.slice(0, -decimals) + "." + textNoDec.slice(-decimals);
 }
 /**
-* Formats a number in NEAR to a string with commas and 5 decimal places
+* Formats a number in Utility to a string with commas and 5 decimal places
 * @param {number} n 
 */
 export function toStringDec(n: number|undefined, decimals: number = 5) {
@@ -90,7 +90,7 @@ export function removeDecZeroes(withDecPoint: string): string {
     return withDecPoint;
 }
 /**
- * Formats a number in NEAR to a string with commas and 5,2, or 0 decimal places
+ * Formats a number in Utility to a string with commas and 5,2, or 0 decimal places
  * @param {number} n 
  */
 export function toStringDecMin(n: number) {

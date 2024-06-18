@@ -2,7 +2,7 @@
 export let nearDollarPrice: number = 0;
 export async function fetchNearDollarPrice() {
   try {
-    let result = await fetch("https://api.diadata.org/v1/quotation/NEAR");
+    let result = await fetch("https://api.diadata.org/v1/quotation/Utility");
     let response = await result.json();
     nearDollarPrice = response.Price;
 
