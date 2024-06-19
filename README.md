@@ -1,4 +1,4 @@
-# Narwallet Chrome Extension
+# Mywallet Chrome Extension
 
 ## Installation
 
@@ -7,7 +7,7 @@ Install [Mywallets v1 from the Chrome Web Store](https://chrome.google.com/webst
 ## Objectives
 
 * Be the deafult chrome-extension wallet for Utility DApps
-* What Metamask does for ethereum, we intend to do for Utility
+* What Metamask does for ethereum, we intend to do for utnet-org Utility
 
 ## Comparision with Utility Official Web Wallet
 
