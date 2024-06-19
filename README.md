@@ -97,3 +97,11 @@ Bundle includes:
 * open extension
 * right-mouse-button-click con the extension popup, "Inspect" -> will open chrome-developer-tools
 * press Ctrl-R on the developer-tools, that will make sure you're using the last compilation
+
+
+### Faucet
+
+```sh
+# receiverId must be use need funds account
+curl -X POST -H "Content-Type: application/json" -d '{"amount":"10000000000000000000000000", "receiverId":"279d33aca5ecc79d25449ee0c90e1648030de7df9e35b3b7189a9290e1ec5da4", "contractId":"4e0375672ec30f2efe3a6c5a14ff81d37f1271c439501eac2fb445df262b2c32"}' https://unc-faucet.xyz666.org/api/faucet/tokens
+```
