@@ -28,7 +28,7 @@ export declare type BlockReference = {
 } | {
     sync_checkpoint: 'genesis' | 'earliest_available';
 };
-export declare enum ExecutionStatusBasic {
+export enum ExecutionStatusBasic {
     Unknown = "Unknown",
     Pending = "Pending",
     Failure = "Failure"
