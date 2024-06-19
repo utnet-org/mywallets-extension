@@ -55,7 +55,7 @@ type AccountIdType = string;
 
 //data that's stored *encrypted* in local storage
 // for each-user
-type NarwalletSecureData = {
+type MywalletSecureData = {
     dataVersion: string;
     hashedPass?: string;
     autoUnlockSeconds: number;
@@ -65,7 +65,7 @@ type NarwalletSecureData = {
     contacts: Record<NetworkNameType, Record<AccountIdType, GContact>>;
 };
 
-const EmptySecureState: NarwalletSecureData = {
+const EmptySecureState: MywalletSecureData = {
     dataVersion: DATA_VERSION,
     hashedPass: undefined,
     autoUnlockSeconds: 600, // 10 minutes
@@ -74,7 +74,7 @@ const EmptySecureState: NarwalletSecureData = {
     contacts: {},
 };
 
-export var secureState: NarwalletSecureData = Object.assign(
+export var secureState: MywalletSecureData = Object.assign(
     {},
     EmptySecureState
 );
@@ -213,7 +213,7 @@ export function setCurrentUser(user: string) {
 function decryptIntoJson(
     hashedPassBase64: string,
     encryptedMsg: string
-): NarwalletSecureData {
+): MywalletSecureData {
     if (!encryptedMsg) throw new Error("encryptedState is empty");
 
     const keyPair = secret.sign_keyPair_fromSeed(decodeBase64(hashedPassBase64));

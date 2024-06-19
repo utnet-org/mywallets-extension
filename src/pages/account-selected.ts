@@ -86,7 +86,7 @@ import { NetworkInfo } from "../lib/unc-api-lite/network.js";
 import { autoRefresh} from "../index.js";
 import { closePopupList, popupComboConfigure, PopupItem, popupListOpen } from "../util/popup-list.js";
 import { tryAsyncRefreshAccountInfoLastBalance, ExtendedAccountData } from "../extendedAccountData.js";
-import { getNarwalletsMetrics, narwalletsMetrics, nearDollarPrice } from "../data/price-data.js";
+import { getMywalletsMetrics, mywalletsMetrics, nearDollarPrice } from "../data/price-data.js";
 import { Asset, assetDivId, ASSET_HISTORY_TEMPLATE, findAsset, History, setAssetBalanceYoctos } from "../structs/account-info.js";
 
 const ACCOUNT_SELECTED = "account-selected";
@@ -243,7 +243,7 @@ export async function refreshSelectedAccountAndAssets() {
   await selectedAccountData.refreshLastBalance()
   updateAccountHeaderDOM();
 
-  await getNarwalletsMetrics()
+  await getMywalletsMetrics()
 
   for (let asset of accInfo.assets) {
     if (d.activePage !== "account-selected" && d.activePage !== "AccountAssetDetail") {
@@ -289,8 +289,8 @@ export async function usdPriceReady() {
     let assetUsdValue = getUsdValue(Main.lastSelectedAsset)
     // if (Pages.lastSelectedAsset.balance != undefined) {
     //   if (Pages.lastSelectedAsset.symbol == "STUNC") {
-    //     await getNarwalletsMetrics()
-    //     if (narwalletsMetrics) assetUsdValue = Pages.lastSelectedAsset.balance * narwalletsMetrics.st_near_price * nearDollarPrice;
+    //     await getMywalletsMetrics()
+    //     if (mywalletsMetrics) assetUsdValue = Pages.lastSelectedAsset.balance * mywalletsMetrics.st_near_price * nearDollarPrice;
     //   }
     //   else if (Pages.lastSelectedAsset.symbol == "STAKED"
     //     || Pages.lastSelectedAsset.symbol == "UNSTAKED"
@@ -478,11 +478,11 @@ type DivIdField = { divId: string };
 export function getUsdValue(asset: Asset): string {
   if (!nearDollarPrice || !asset.balance) return "";
   let assetUsdValue;
-  if (asset.symbol == "STUNC" && narwalletsMetrics) {
-    assetUsdValue = asset.balance * narwalletsMetrics.st_near_price * nearDollarPrice;
+  if (asset.symbol == "STUNC" && mywalletsMetrics) {
+    assetUsdValue = asset.balance * mywalletsMetrics.st_near_price * nearDollarPrice;
   }
-  else if (asset.symbol == "$META" && narwalletsMetrics) {
-    assetUsdValue = asset.balance * narwalletsMetrics.ref_meta_price * narwalletsMetrics.st_near_price * nearDollarPrice;
+  else if (asset.symbol == "$META" && mywalletsMetrics) {
+    assetUsdValue = asset.balance * mywalletsMetrics.ref_meta_price * mywalletsMetrics.st_near_price * nearDollarPrice;
   }
 
   else if (asset.symbol == "STAKED"

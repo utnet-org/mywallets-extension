@@ -16,7 +16,7 @@ export async function fetchNearDollarPrice() {
   }
 }
 
-export type NarwalletsMetrics = {
+export type MywalletsMetrics = {
   env_epoch_height: number;
   prev_epoch_duration_ms: number;
   contract_account_balance: number;
@@ -61,16 +61,16 @@ export type NarwalletsMetrics = {
   validator_next_seat_price: number;
 }
 
-export let narwalletsMetrics: NarwalletsMetrics | undefined;
+export let mywalletsMetrics: MywalletsMetrics | undefined;
 const FETCH_INTERVAL_MS = 10 * 1000 * 60; // 10 minutes in milliseconds
 const RETRY_INTERVAL_MS = 10 * 1000; // 10 seconds in milliseconds
 let lastFetched = new Date().getTime() - FETCH_INTERVAL_MS;
-export async function getNarwalletsMetrics() {
+export async function getMywalletsMetrics() {
   const elapsed = new Date().getTime() - lastFetched
-  if (elapsed >= FETCH_INTERVAL_MS || (!narwalletsMetrics && elapsed >= RETRY_INTERVAL_MS)) {
+  if (elapsed >= FETCH_INTERVAL_MS || (!mywalletsMetrics && elapsed >= RETRY_INTERVAL_MS)) {
     try {
-      let data = await fetch("https://validators.narwallets.com/metrics_json")
-      narwalletsMetrics = await data.json()
+      let data = await fetch("https://validators.mywallets.com/metrics_json")
+      mywalletsMetrics = await data.json()
       lastFetched = new Date().getTime()
       // const metapool = activeNetworkInfo.liquidStakingContract;
       // let data = await askBackgroundViewMethod(

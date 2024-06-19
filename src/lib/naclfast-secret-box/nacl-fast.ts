@@ -1,6 +1,6 @@
 // @ts-nocheck
 //
-// LMT https://github.com/NarwalletGH/tweetnacl-js.git
+// LMT https://github.com/MywalletGH/tweetnacl-js.git
 //
 // ---------------------------------------
 // MODIFIED TO WORK as a ES2020 JS MODULE

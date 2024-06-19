@@ -1,8 +1,8 @@
 {
-  "name": "narwallet-extension",
-  "version": "4.0.7",
+  "name": "mywallet-extension",
+  "version": "1.0.2",
   "description": "Mywallet chrome-extension wallet for Utility blockchain",
-  "author": "Lucio Tato <lucio@metapool.app>",
+  "author": "Hello Inc <hello@metapool.app>",
   "homepage": "www.mywallet.com",
   "type": "module",
   "private": true,

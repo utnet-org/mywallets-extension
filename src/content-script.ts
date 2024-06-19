@@ -28,7 +28,7 @@ window.addEventListener("message", (event) => {
   const msg = event.data
   //console.log("Message received: ", msg)
   if (msg && msg.type && (msg.type == "nw") && msg.dest == "ext") {
-    // Sending message to narwallets extension background service worker 
+    // Sending message to mywallets extension background service worker 
     chrome.runtime.sendMessage(msg, function (response) {
       handleResponse(response, msg);
     });

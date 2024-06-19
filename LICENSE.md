@@ -15,9 +15,9 @@ You are granted a non-exclusive, non-transferable, non-sublicensable license to 
  2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
  3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
 
-You will not use any trade mark, service mark, trade name, logo of Narwallet or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+You will not use any trade mark, service mark, trade name, logo of Mywallet or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 
-If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at <hello@narwallets.com>
+If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at <hello@mywallets.com>
 
 ----
 License Spirit:

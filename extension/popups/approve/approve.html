@@ -1,57 +1,48 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Mywallets Approve Transaction</title>
-    <link rel="stylesheet" href="approve.css">
+    <link rel="stylesheet" href="approve.css" />
+  </head>
 
-</head>
-
-<body>
-
+  <body>
     <div id="approve-face" class="appface hidden">
+      <div class="sep30"></div>
 
-        <div class="sep30"> </div>
+      <h3><span id="web-page">www.mywallets.com</span> is asking</h3>
 
-        <h3> <span id="web-page">www.narwallets.com</span> is asking</h3>
+      <ul id="tx-list" class="tx-list"></ul>
 
-        <ul id="tx-list" class="tx-list">
-        </ul>
+      <div class="sep30"></div>
+      <!-- OK CANCEL buttons common to all subpages -->
+      <div class="button-group">
+        <button id="approve-ok" class="ok">OK</button>
+        <button id="approve-cancel" class="cancel">Cancel</button>
+      </div>
 
-        <div class="sep30"> </div>
-        <!-- OK CANCEL buttons common to all subpages -->
-        <div class="button-group">
-            <button id="approve-ok" class="ok">OK</button>
-            <button id="approve-cancel" class="cancel">Cancel</button>
+      <!-- -->
+      <div id="err-div"></div>
+      <!-- -->
+
+      <div id="wait">
+        <div class="lds-ring">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-
-
-        <!-- -->
-        <div id="err-div"></div>
-        <!-- -->
-
-        <div id="wait">
-            <div class="lds-ring">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-        </div>
-
+      </div>
     </div>
 
     <script type="module" src="../../dist/popups/approve/approve.js"></script>
-
-</body>
-
+  </body>
 </html>

@@ -12,8 +12,8 @@ For example, even if EIP712 is a huge improvement, in the eyes of our hypothetic
 <br>*([EIP712 "before and after"](https://ethereum-magicians.org/t/eip-712-eth-signtypeddata-as-a-standard-for-machine-verifiable-and-human-readable-typed-data-signing/397). To read/understand/verify the data in the image on the right, you need way more knowledge our model-users have, so both screens are unreadable to them. Amounts with that many zeroes are confusing and hard to read and they don't know what to do with a unix timestamp. Our users are not necessarilly experts)*
 
 3) This is what we want our users to see when approving transactions:
-![image|507x500](docs/images/narwallets-approve-transaction.png)
-<br>*example from DApp-diversifying-staking-pool & narwallet*
+![image|507x500](docs/images/mywallets-approve-transaction.png)
+<br>*example from DApp-diversifying-staking-pool & mywallet*
 <br><br>The info here for the user is: what application is currently connected, what contract the user is going to operate on and what function exactly is going to call, with all the amounts in $unc (no yoctos, all easy to read amounts), and finally what account is connected and will sign the transaction.
 
 4) We want to ease-up the onboarding of ethereum users. One of the Utility features more alien to eth users is the fact that an account can have *more than one private key*. We're hiding that functionality. In normal operations, we're asking for the seed phrase or a priv-key (full access) and then sign transactions with that, i.e. the wallet is not adding keys to the user's near account.

@@ -38,11 +38,11 @@ import { WALLET_SELECTOR_CODES } from "./background/background.js";
 // used in injected-script.ts
 declare global {
   interface Window {
-    narwallets: Wallet;
+    mywallets: Wallet;
   }
 }
 
-export const SINGLE_USER_EMAIL = "unique-user@narwallets.com"
+export const SINGLE_USER_EMAIL = "unique-user@mywallets.com"
 
 const AUTO_LOCK_SECONDS = 15; //auto-lock wallet after 1hr
 
@@ -191,14 +191,14 @@ async function securityOptions() {
 
 function asideContact() {
   chrome.windows.create({
-    url: "https://narwallets.com/contact.html",
+    url: "https://mywallets.com/contact.html",
     state: "maximized",
   });
 }
 
 function asideAbout() {
   chrome.windows.create({
-    url: "https://narwallets.com",
+    url: "https://mywallets.com",
     state: "maximized",
   });
 }
@@ -391,7 +391,7 @@ function openTermsOfUseOnNewWindow() {
   //   email: SINGLE_USER_EMAIL, // d.inputById("email").value,
   // });
   chrome.windows.create({
-    url: "https://narwallets.com/terms.html",
+    url: "https://mywallets.com/terms.html",
   });
   return false;
 }

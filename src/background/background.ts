@@ -204,7 +204,7 @@ function resolveUntrustedFromPage(
         handleUnlock(msg, sendResponse)
       } else {
         // The standard sends the transaction information inside a transaction object, but it wasn't previously done like this.
-        // Consider changing the way narwallets builds this object.
+        // Consider changing the way mywallets builds this object.
         if (msg.params.transaction) {
           msg.params = msg.params.transaction
           msg.params.actions = msg.params.actions.map((action: any) => {
@@ -222,7 +222,7 @@ function resolveUntrustedFromPage(
         handleUnlock(msg, sendResponse)
       } else {
         // The standard sends the transaction information inside a transaction object, but it wasn't previously done like this.
-        // Consider changing the way narwallets builds this object.
+        // Consider changing the way mywallets builds this object.
         if (msg.params.length > 0 && msg.params[0].transaction) {
           msg.params = msg.params.map((p: any) => {
             p = p.transaction

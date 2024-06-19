@@ -187,7 +187,7 @@ interface Wallet {
 }
 
 async function script() {
-    window.narwallets = {
+    window.mywallets = {
         id: "Mywallets",
         connected: false,
         network: DEFAULT_NETWORK,
@@ -221,9 +221,9 @@ async function supportsNetwork(networkId: string): Promise<boolean> {
  * @returns An array with the selected account id (on wallet-selector they want an array in case someone wants to have more accounts to decide)
  */
 async function connect(params: ConnectParams): Promise<Array<Account>> {
-    const accountResponse: Account = (await sendToNarwallets(NARWALLETS_CODES.CONNECT, false, params)) as Account;
-    window.narwallets.accounts.push(accountResponse)
-    window.narwallets.connected = true
+    const accountResponse: Account = (await sendToMywallets(MYWALLETS_CODES.CONNECT, false, params)) as Account;
+    window.mywallets.accounts.push(accountResponse)
+    window.mywallets.connected = true
     return [accountResponse];
 }
 
@@ -234,7 +234,7 @@ async function connect(params: ConnectParams): Promise<Array<Account>> {
  * @returns 
  */
 async function signIn(params: SignInParams): Promise<void> {
-    connect({ networkId: window.narwallets.network.networkId })
+    connect({ networkId: window.mywallets.network.networkId })
 }
 
 /**
@@ -248,15 +248,15 @@ async function signOut(param?: SignOutParams): Promise<void> {
         return;
     }
 
-    const res: Resolve = await sendToNarwallets("sign-out");
+    const res: Resolve = await sendToMywallets("sign-out");
     // const res = await _state.wallet.signOut();
     if (res === true) {
-        window.narwallets.accounts = []
-        window.narwallets.connected = false
+        window.mywallets.accounts = []
+        window.mywallets.connected = false
         return;
     }
 
-    const errorObject: NarwalletsError = res as NarwalletsError;
+    const errorObject: MywalletsError = res as MywalletsError;
 
     const error = new Error(
         typeof errorObject.error === "string"
@@ -277,16 +277,16 @@ async function signOut(param?: SignOutParams): Promise<void> {
  * @returns Type SignedTransaction is not properly defined yet, so FinalExecutionOutcome will be returned
  */
 async function signTransaction(params: SignTransactionParams): Promise<SignedTransaction> {
-    return sendToNarwallets(
-        NARWALLETS_CODES.SIGN_AND_SEND_TRANSACTION,
+    return sendToMywallets(
+        MYWALLETS_CODES.SIGN_AND_SEND_TRANSACTION,
         false,
         params
     ).then((response: Resolve) => response as SignedTransaction);
 }
 
 async function signTransactions(params: SignTransactionsParams): Promise<Array<SignedTransaction>> {
-    return sendToNarwallets(
-        NARWALLETS_CODES.SIGN_AND_SEND_TRANSACTIONS,
+    return sendToMywallets(
+        MYWALLETS_CODES.SIGN_AND_SEND_TRANSACTIONS,
         false,
         params
     ).then((response: Resolve) => response as SignedTransaction[]);
@@ -327,12 +327,12 @@ type Resolve =
     | boolean
     | FinalExecutionOutcome
     | Array<FinalExecutionOutcome>
-    | NarwalletsError
+    | MywalletsError
     | Network
     | Account
     | SignedTransaction
     | SignedTransaction[];
-type NarwalletsFunctionParams =
+type MywalletsFunctionParams =
     | undefined
     | boolean
     | SignTransactionParams
@@ -347,12 +347,12 @@ interface SignAndSendTransactionParams {
     actions: Array<Action>;
 }
 
-interface NarwalletsParams {
+interface MywalletsParams {
     iconUrl?: string;
     deprecated?: boolean;
 }
 
-interface NarwalletsError {
+interface MywalletsError {
     error: string | { type: string };
 }
 
@@ -364,7 +364,7 @@ interface PendingPromises {
     timeout?: number;
 }
 
-const NARWALLETS_CODES = {
+const MYWALLETS_CODES = {
     CONNECT: "connect",
     SIGN_IN: "sign-in",
     IS_INSTALLED: "is-installed",
@@ -380,10 +380,10 @@ const NARWALLETS_CODES = {
 let id = 0;
 const pendingPromises: Array<PendingPromises> = [];
 
-const sendToNarwallets = (
+const sendToMywallets = (
     code: string,
     withTimeout = false,
-    params?: NarwalletsFunctionParams
+    params?: MywalletsFunctionParams
 ): Promise<Resolve> => {
     const promise = new Promise<Resolve>((resolve, reject) => {
         id++;
@@ -414,29 +414,29 @@ const sendToNarwallets = (
 };
 
 async function setNetwork(): Promise<void> {
-    let network: Network = await sendToNarwallets(
-        NARWALLETS_CODES.GET_NETWORK,
+    let network: Network = await sendToMywallets(
+        MYWALLETS_CODES.GET_NETWORK,
         false
     ) as Network;
-    // window.narwallets.network = network
+    // window.mywallets.network = network
 }
 
 
 
 const isSignedIn = (): Promise<Resolve> => {
-    return sendToNarwallets(NARWALLETS_CODES.IS_SIGNED_IN, true);
+    return sendToMywallets(MYWALLETS_CODES.IS_SIGNED_IN, true);
 };
 
 const getAccountId = async (): Promise<Account[]> => {
-    const response = (await sendToNarwallets(NARWALLETS_CODES.GET_ACCOUNT_ID, false)) as string
+    const response = (await sendToMywallets(MYWALLETS_CODES.GET_ACCOUNT_ID, false)) as string
     return [{ accountId: response, publicKey: PublicKey.from("Add public key") }];
 };
 
 const callSignAndSendTransaction = (
     params: SignAndSendTransactionParams
 ): Promise<FinalExecutionOutcome> => {
-    return sendToNarwallets(
-        NARWALLETS_CODES.SIGN_AND_SEND_TRANSACTION,
+    return sendToMywallets(
+        MYWALLETS_CODES.SIGN_AND_SEND_TRANSACTION,
         false,
         params
     ).then((response: Resolve) => response as FinalExecutionOutcome);
@@ -445,8 +445,8 @@ const callSignAndSendTransaction = (
 const callSignAndSendTransactions = (
     params: Array<SignAndSendTransactionParams>
 ): Promise<FinalExecutionOutcome[]> => {
-    return sendToNarwallets(
-        NARWALLETS_CODES.SIGN_AND_SEND_TRANSACTIONS,
+    return sendToMywallets(
+        MYWALLETS_CODES.SIGN_AND_SEND_TRANSACTIONS,
         false,
         params
     ).then((response: Resolve) => response as FinalExecutionOutcome[]);
