@@ -304,9 +304,21 @@ export async function sendTransactionAndParseResult(actions: TX.Action[], signer
 
     const executionOutcome = await sendSignedTransaction(signedTx)
 
-    parseFinalExecutionOutcome(executionOutcome);
+    // TODO: if Tx is Unknown or Started.
+    let ret: FinalExecutionOutcome = {
+        status: ExecutionStatusBasic.Pending,
+        transaction: signedTx.transaction,
+        transaction_outcome: {
+            id: bs58.encode(txHash),
+            outcome: undefined,
+        },
+        receipts_outcome: [],
+        final_execution_status: 'NONE'
+    };
 
-    return executionOutcome;
+    return ret;
+
+    //parseFinalExecutionOutcome(executionOutcome);
 }
 
 //-------------------------------
