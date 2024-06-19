@@ -1,6 +1,6 @@
 //----------------------------------
 // MetaStaking POOL smart-contract proxy for
-// https://github.com/Narwallets/meta-pool
+// https://github.com/Mywallets/meta-pool
 //----------------------------------
 
 import { ntoy, TGas } from "../util/conversions.js"

@@ -579,7 +579,7 @@ function renderSelectedAccountHeader() {
       <div class="accountdetscomment">
         {accountInfo.note}
       </div>
-      <div class="assetdetcontract">Utility
+      <div class="assetdetcontract">$UNC
       </div>
       <div class="accountdetsbalance balance">{total}</div>
       <div class="accountdetsfiat hidden">
@@ -1073,7 +1073,7 @@ async function performStake() {
     //const amountToStake = info.lastBalance - info.staked - 36
     CheckValidAmount(amountToStake)
     if (liquidStake && amountToStake < 1) {
-      throw Error("Stake at least 1 Utility");
+      throw Error("Stake at least 1 $UNC");
     }
 
     let poolAccInfo = {
@@ -1186,7 +1186,7 @@ async function performStake() {
     if (selectedAccountData.total) selectedAccountData.total -= amountToStake;
     await refreshSaveSelectedAccount();
 
-    d.showSuccess(`Staked ${amountToStake} Utility`);
+    d.showSuccess(`Staked ${amountToStake} $UNC`);
     hideOkCancel();
     switchToAssetsSupbage();
   } catch (ex) {
@@ -1221,7 +1221,7 @@ async function performLockupContractStake() {
     CheckValidAmount(amountToStake)
     const liquidStake = stakeTabSelected == 1;
     if (liquidStake && amountToStake < 1) {
-      throw Error("Stake at least 1 Utility");
+      throw Error("Stake at least 1 $UNC");
     }
 
     const lc = new LockupContract(info);
@@ -1248,7 +1248,7 @@ async function performLockupContractStake() {
     //refresh status
     await refreshSaveSelectedAccount();
 
-    d.showSuccess(`Staked ${amountToStake} Utility`);
+    d.showSuccess(`Staked ${amountToStake} $UNC`);
     switchToAssetsSupbage();
   } catch (ex) {
     d.showErr(ex.message);

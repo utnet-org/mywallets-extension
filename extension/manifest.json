@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Narwallets V4",
+  "name": "Mywallets V1",
   "description": "Utility blockchain wallet",
-  "version": "4.0.7",
+  "version": "1.0.2",
   "action": {
     "default_popup": "index.html"
   },

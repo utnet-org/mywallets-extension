@@ -265,17 +265,17 @@ export async function unlockSecureStateSHA(
 // get existing account on Network.current or throw
 export function getAccount(accName: string): Account {
     log("getAccount", accName);
-    if (isLocked()) throw Error(`Narwallets: Wallet is locked`);
+    if (isLocked()) throw Error(`Mywallets: Wallet is locked`);
     const network = Network.current;
     if (!network)
-        throw Error(`Narwallets: No network selected. Unlock the wallet`);
+        throw Error(`Mywallets: No network selected. Unlock the wallet`);
     const accounts = secureState.accounts[network];
     if (!accounts)
-        throw Error(`Narwallets: No info on ${network}. Unlock the wallet`);
+        throw Error(`Mywallets: No info on ${network}. Unlock the wallet`);
     const accInfo = accounts[accName];
     if (!accInfo)
         throw Error(
-            `Narwallets: account ${accName} NOT FOUND on wallet. Network:${network}`
+            `Mywallets: account ${accName} NOT FOUND on wallet. Network:${network}`
         );
     return accInfo;
 }

@@ -1,14 +1,14 @@
 {
   "name": "narwallet-extension",
   "version": "4.0.7",
-  "description": "Narwallet chrome-extension wallet for Utility blockchain",
+  "description": "Mywallet chrome-extension wallet for Utility blockchain",
   "author": "Lucio Tato <lucio@metapool.app>",
-  "homepage": "www.narwallets.com",
+  "homepage": "www.mywallet.com",
   "type": "module",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Narwallets/narwallets-extension.git"
+    "url": "git+https://github.com/Mywallets/mywallet-extension.git"
   },
   "scripts": {
     "build": "tsc -b -verbose tsconfig-sourcemap.json && rm -rf test-new-install-ln && ln -sf extension test-new-install-ln",
@@ -17,7 +17,7 @@
   },
   "keywords": [
     "Utility",
-    "Narwallet"
+    "Mywallet"
   ],
   "devDependencies": {
     "@types/chrome": "^0.0.197"

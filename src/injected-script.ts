@@ -188,7 +188,7 @@ interface Wallet {
 
 async function script() {
     window.narwallets = {
-        id: "Narwallets",
+        id: "Mywallets",
         connected: false,
         network: DEFAULT_NETWORK,
         accounts: [],
@@ -239,7 +239,7 @@ async function signIn(params: SignInParams): Promise<void> {
 
 /**
  * Delete FunctionCall access key(s) for one or more accounts. This request should require explicit approval from the user.
- * Since on Narwallets there will only be one user in accounts, it isn't needed the SignOutParams
+ * Since on Mywallets there will only be one user in accounts, it isn't needed the SignOutParams
  * @param param 
  * @returns 
  */

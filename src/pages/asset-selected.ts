@@ -513,12 +513,12 @@ async function LiquidUnstakeOk() {
     showInitialSubPage();
     d.showSuccess(
       "Liquid unstaked " + c.toStringDec(c.yton(yoctosToUnstake)) + " stNEAR, received " +
-      c.toStringDec(c.yton(liquidUnstakeResult.near)) + " Utility"
+      c.toStringDec(c.yton(liquidUnstakeResult.near)) + " $UNC"
     );
 
     // leave this for last in case it fails to add the $META asset
     if (liquidUnstakeResult.near != "0") {
-      // add also liquid-unstake to main account, with the Utility amount received
+      // add also liquid-unstake to main account, with the $UNC amount received
       let hist = new History("liquid-unstake", c.yton(liquidUnstakeResult.near));
       selectedAccountData.accountInfo.history.unshift(hist)
     }

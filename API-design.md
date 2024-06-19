@@ -14,6 +14,6 @@ For example, even if EIP712 is a huge improvement, in the eyes of our hypothetic
 3) This is what we want our users to see when approving transactions:
 ![image|507x500](docs/images/narwallets-approve-transaction.png)
 <br>*example from DApp-diversifying-staking-pool & narwallet*
-<br><br>The info here for the user is: what application is currently connected, what contract the user is going to operate on and what function exactly is going to call, with all the amounts in Utility (no yoctos, all easy to read amounts), and finally what account is connected and will sign the transaction.
+<br><br>The info here for the user is: what application is currently connected, what contract the user is going to operate on and what function exactly is going to call, with all the amounts in $unc (no yoctos, all easy to read amounts), and finally what account is connected and will sign the transaction.
 
 4) We want to ease-up the onboarding of ethereum users. One of the Utility features more alien to eth users is the fact that an account can have *more than one private key*. We're hiding that functionality. In normal operations, we're asking for the seed phrase or a priv-key (full access) and then sign transactions with that, i.e. the wallet is not adding keys to the user's near account.

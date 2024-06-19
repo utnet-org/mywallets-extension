@@ -573,7 +573,7 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
       // Note: V4 uses signAndSendTransaction and returns FinalExecutionOutcome (full return data, needs to be parsed to extract results)
       const signerId = msg.signerId || "...";
       const accInfo = getAccount(signerId);
-      if (!accInfo.privateKey) throw Error(`Narwallets: account ${signerId} is read-only`);
+      if (!accInfo.privateKey) throw Error(`Mywallets: account ${signerId} is read-only`);
       //convert wallet-api actions to near.TX.Action
       const actions: TX.Action[] = [];
       for (let item of msg.tx.items) {
@@ -671,7 +671,7 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
 //   log("_connectedTabs[msg.tabId]", JSON.stringify(_connectedTabs[msg.tabId]));
 
 //   if (!_connectedTabs[msg.tabId]) {
-//     resolvedMsg.err = `chrome-tab ${msg.tabId} is not connected to Narwallets`; //if error also send msg to content-script->tab
+//     resolvedMsg.err = `chrome-tab ${msg.tabId} is not connected to Mywallets`; //if error also send msg to content-script->tab
 //     chrome.tabs.sendMessage(resolvedMsg.tabId, resolvedMsg);
 //     return;
 //   }
@@ -777,7 +777,7 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
 //         const signerId = ctinfo.connectedAccountId;
 //         const accInfo = getAccount(signerId);
 //         if (!accInfo.privateKey) {
-//           throw Error(`Narwallets: account ${signerId} is read-only`);
+//           throw Error(`Mywallets: account ${signerId} is read-only`);
 //         }
 
 //         msg.dest = "approve"; //send msg to the approval popup
@@ -983,7 +983,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
 //     } else {
 //       let errMsg =
 //         cpsData.ctinfo.connectedResponse.err ||
-//         "not responding / Not a Narwallets-compatible Web App";
+//         "not responding / Not a Mywallets-compatible Web App";
 //       return cpsData.reject(Error(cpsData.url + ": " + errMsg));
 //     }
 //   }, 250);

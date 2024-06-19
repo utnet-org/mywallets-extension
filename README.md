@@ -2,7 +2,7 @@
 
 ## Installation
 
-Install [Narwallets v4 from the Chrome Web Store](https://chrome.google.com/webstore/detail/narwallets-v4/lkpeokpdkmcdaiadpmnnpimlgmdobkdj)
+Install [Mywallets v4 from the Chrome Web Store](https://chrome.google.com/webstore/detail/narwallets-v4/lkpeokpdkmcdaiadpmnnpimlgmdobkdj)
 
 ## Objectives
 
@@ -11,12 +11,12 @@ Install [Narwallets v4 from the Chrome Web Store](https://chrome.google.com/webs
 
 ## Comparision with Utility Official Web Wallet
 
-* Narwallets-extension aims to be a simpler and complemetary tool to the official Utility Web wallet
-* Narwallets is designed for a desktop/laptop experience with a chromium based browser, Utility Web wallet works on any browser and mobile
-* Narwallets is available only in english, Utility Web wallet supports multiple languages
-* Narwallets is not yet integrated with Ledger or other HW Wallets
-* Narwallets has only one option regading account recovery: Write-down the seed phrase. Utility Web Wallet has other user-friendly recovery options (email & phone recovery).
-* Narwallets, aiming at simplicity, has no 2FA support yet.
+* Mywallets-extension aims to be a simpler and complemetary tool to the official Utility Web wallet
+* Mywallets is designed for a desktop/laptop experience with a chromium based browser, Utility Web wallet works on any browser and mobile
+* Mywallets is available only in english, Utility Web wallet supports multiple languages
+* Mywallets is not yet integrated with Ledger or other HW Wallets
+* Mywallets has only one option regading account recovery: Write-down the seed phrase. Utility Web Wallet has other user-friendly recovery options (email & phone recovery).
+* Mywallets, aiming at simplicity, has no 2FA support yet.
 
 The good:
 
@@ -52,7 +52,7 @@ The good:
 
 ## Dev Flow (v0.1)
 
-* Chrome Dev Tools: Map folder to Narwallets-extension/extension
+* Chrome Dev Tools: Map folder to Mywallets-extension/extension
 * Use Chrome Dev Tools as an quick-and-dirty IDE with Edit & Continue
 * Use VSCode as the main IDE - Ctrl-Shift-B to build with typescript
 
@@ -66,7 +66,7 @@ We're using base crypto libs as a bundle (The ideal solution would be to have ty
 
 * [ ] Replace bundle with typescript versions of basic crypto tools
 
-We need to reduce the bundle's size. Bundle is at <https://github.com/Narwallets/bundled-crypto-libs.git>
+We need to reduce the bundle's size. Bundle is at <https://github.com/Mywallets/bundled-crypto-libs.git>
 
 Bundle includes:
 
@@ -80,7 +80,7 @@ Bundle includes:
 
 ### Clone this repository and run as unpacked extension
 
-* `git clone https://github.com/Narwallets/narwallets-extension.git`
+* `git clone https://github.com/Mywallets/narwallets-extension.git`
 * `cd narwallets-extension`
 * install packages: `npm install`
 * compile: `npm run build`
