@@ -38,7 +38,7 @@ class CreateAccount extends IAction { }
 class DeployContract extends IAction { code!: Uint8Array; }
 class FunctionCall extends IAction { methodName!: string; args!: Uint8Array; gas!: bigint; deposit!: bigint; }
 class Transfer extends IAction { deposit!: bigint; }
-class Stake extends IAction { stake!: bigint; publicKey!: CurveAndArrayKey; }
+class Pledge extends IAction { pledge!: bigint; publicKey!: CurveAndArrayKey; }
 class AddKey extends IAction { publicKey!: CurveAndArrayKey; accessKey!: AccessKey; }
 class DeleteKey extends IAction { publicKey!: CurveAndArrayKey; }
 class DeleteAccount extends IAction { beneficiaryId!: string; }
@@ -72,7 +72,7 @@ export function transfer(deposit: bigint): Action {
 }
 
 export function stake(stake: bigint, publicKey: CurveAndArrayKey): Action {
-    return new Action({ stake: new Stake({ stake, publicKey }) });
+    return new Action({ stake: new Pledge({ stake, publicKey }) });
 }
 
 export function addKey(publicKey: CurveAndArrayKey, accessKey: AccessKey): Action {
@@ -130,7 +130,7 @@ export class Action extends Enum {
     deployContract!: DeployContract;
     functionCall!: FunctionCall;
     transfer!: Transfer;
-    stake!: Stake;
+    stake!: Pledge;
     addKey!: AddKey;
     deleteKey!: DeleteKey;
     deleteAccount!: DeleteAccount;
@@ -191,7 +191,7 @@ export const SCHEMA = new Map<Function, any>([
             ['deployContract', DeployContract],
             ['functionCall', FunctionCall],
             ['transfer', Transfer],
-            ['stake', Stake],
+            ['stake', Pledge],
             ['addKey', AddKey],
             ['deleteKey', DeleteKey],
             ['deleteAccount', DeleteAccount],
@@ -216,7 +216,7 @@ export const SCHEMA = new Map<Function, any>([
             ['deposit', 'u128']
         ]
     }],
-    [Stake, {
+    [Pledge, {
         kind: 'struct', fields: [
             ['stake', 'u128'],
             ['publicKey', CurveAndArrayKey]

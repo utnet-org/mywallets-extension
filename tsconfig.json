@@ -19,7 +19,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": false,
     "experimentalDecorators": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "moduleResolution": "node"
   }
 }

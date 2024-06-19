@@ -20,6 +20,7 @@ declare type BlockHash = string;
 declare type BlockHeight = number;
 export declare type BlockId = BlockHash | BlockHeight;
 export declare type Finality = 'optimistic' | 'near-final' | 'final';
+export declare type TxExecutionStatus = 'NONE' | 'INCLUDED' | 'INCLUDED_FINAL' | 'EXECUTED' | 'FINAL' | 'EXECUTED_OPTIMISTIC';
 export declare type BlockReference = {
     blockId: BlockId;
 } | {
@@ -52,15 +53,18 @@ export interface FinalExecutionStatus {
 }
 export interface ExecutionOutcomeWithId {
     id: string;
-    outcome: ExecutionOutcome;
+    outcome?: ExecutionOutcome;
 }
 export interface ExecutionOutcome {
     logs: string[];
     receipt_ids: string[];
     gas_burnt: number;
+    tokens_burnt: string;
+    executor_id: string;
     status: ExecutionStatus | ExecutionStatusBasic;
 }
 export interface FinalExecutionOutcome {
+    final_execution_status: TxExecutionStatus;
     status: FinalExecutionStatus | FinalExecutionStatusBasic;
     transaction: any;
     transaction_outcome: ExecutionOutcomeWithId;

@@ -145,7 +145,7 @@ export async function signMessageGetSignature(buf: Uint8Array, privateKey: strin
 }
 
 //-------------------------------
-export async function signTransaction(actions: TX.Action[], signerId: string, receiver: string, privateKey: string): Promise<TX.SignedTransaction> {
+export async function signTransaction(actions: TX.Action[], signerId: string, receiver: string, privateKey: string): Promise<[Uint8Array, TX.SignedTransaction]> {
 
     const keyPair = KeyPairEd25519.fromString(privateKey);
     const publicKey = keyPair.getPublicKey();
@@ -184,7 +184,7 @@ export async function signTransaction(actions: TX.Action[], signerId: string, re
         })
     });
     //console.log("signedTransaction", signedTransaction)
-    return signedTransaction
+    return [serializedTxHash, signedTransaction]
 }
 
 export async function getAccessKey(signerId: string, privateKey: string): Promise<any> {
@@ -244,7 +244,9 @@ export async function signTransaction2(accessKey: any, actions: TX.Action[], sig
 export function sendSignedTransaction(signedTransaction: TX.SignedTransaction): Promise<FinalExecutionOutcome> {
     const borshEncoded = signedTransaction.encode();
     const b64EncodedString = encodeBase64(borshEncoded)
-    return jsonRpc('send_tx', [b64EncodedString]) as Promise<FinalExecutionOutcome>
+    return jsonRpc('send_tx', {
+        "signed_tx_base64": b64EncodedString,
+        "wait_until": "NONE"}) as Promise<FinalExecutionOutcome>
 };
 
 
@@ -252,9 +254,9 @@ export function sendSignedTransaction(signedTransaction: TX.SignedTransaction): 
 export async function sendTransaction(actions: TX.Action[], signerId: string, receiver: string, privateKey: string)
     : Promise<FinalExecutionOutcome> {
 
-    const signedTransaction = await signTransaction(actions, signerId, receiver, privateKey)
+    const [_txHash, signedTx] = await signTransaction(actions, signerId, receiver, privateKey)
 
-    return sendSignedTransaction(signedTransaction)
+    return sendSignedTransaction(signedTx)
 }
 
 //-------------------------------
@@ -270,11 +272,25 @@ export async function sendTransaction2(accessKey: any, actions: TX.Action[], sig
 export async function sendTransactionAndParseResult(actions: TX.Action[], signerId: string, receiver: string, privateKey: string)
     : Promise<FinalExecutionOutcome> {
 
-    const signedTransaction = await signTransaction(actions, signerId, receiver, privateKey)
+    const [txHash, signedTx] = await signTransaction(actions, signerId, receiver, privateKey)
 
-    const executionOutcome = await sendSignedTransaction(signedTransaction)
+    const executionOutcome = await sendSignedTransaction(signedTx)
 
-    return parseFinalExecutionOutcome(executionOutcome)
+    parseFinalExecutionOutcome(executionOutcome);
+    
+    // TODO: if Tx is Unknown or Started.
+    let ret: FinalExecutionOutcome = {
+        status: FinalExecutionStatusBasic.Started,
+        transaction: signedTx.transaction,
+        transaction_outcome: {
+            id: bs58.encode(txHash),
+            outcome: undefined,
+        },
+        receipts_outcome: [],
+        final_execution_status: 'NONE'
+    };
+
+    return ret;
 }
 
 //-------------------------------
