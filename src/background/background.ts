@@ -611,7 +611,7 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
     }
       break
 
-    // new v4 - wallet-connect mode
+    // new v1 - wallet-connect mode
     // Note: sign-and-send-transaction should return a FinalExecutionOutcome struct
     case "sign-and-send-transaction": {
       const accInfo = getAccount(msg.params.signerId);

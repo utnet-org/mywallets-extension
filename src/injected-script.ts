@@ -421,8 +421,6 @@ async function setNetwork(): Promise<void> {
     // window.mywallets.network = network
 }
 
-
-
 const isSignedIn = (): Promise<Resolve> => {
     return sendToMywallets(MYWALLETS_CODES.IS_SIGNED_IN, true);
 };

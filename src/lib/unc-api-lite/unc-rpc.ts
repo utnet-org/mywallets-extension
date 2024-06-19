@@ -198,7 +198,7 @@ export async function getAccessKey(signerId: string, privateKey: string): Promis
 }
 
 //-------------------------------
-export async function signTransaction2(accessKey: any, actions: TX.Action[], signerId: string, receiver: string, privateKey: string): Promise<TX.SignedTransaction> {
+export async function signTransaction2(accessKey: any, actions: TX.Action[], signerId: string, receiver: string, privateKey: string): Promise<[Uint8Array, TX.SignedTransaction]> {
 
     const keyPair = KeyPairEd25519.fromString(privateKey);
     const publicKey = keyPair.getPublicKey();
@@ -237,7 +237,7 @@ export async function signTransaction2(accessKey: any, actions: TX.Action[], sig
         })
     });
     //console.log("signedTransaction", signedTransaction)
-    return signedTransaction
+    return [serializedTxHash, signedTransaction]
 }
 
 //-------------------------------
@@ -254,30 +254,10 @@ export function sendSignedTransaction(signedTransaction: TX.SignedTransaction): 
 export async function sendTransaction(actions: TX.Action[], signerId: string, receiver: string, privateKey: string)
     : Promise<FinalExecutionOutcome> {
 
-    const [_txHash, signedTx] = await signTransaction(actions, signerId, receiver, privateKey)
-
-    return sendSignedTransaction(signedTx)
-}
-
-//-------------------------------
-export async function sendTransaction2(accessKey: any, actions: TX.Action[], signerId: string, receiver: string, privateKey: string)
-    : Promise<FinalExecutionOutcome> {
-
-    const signedTransaction = await signTransaction2(accessKey, actions, signerId, receiver, privateKey)
-
-    return sendSignedTransaction(signedTransaction)
-}
-
-//-------------------------------
-export async function sendTransactionAndParseResult(actions: TX.Action[], signerId: string, receiver: string, privateKey: string)
-    : Promise<FinalExecutionOutcome> {
-
     const [txHash, signedTx] = await signTransaction(actions, signerId, receiver, privateKey)
 
     const executionOutcome = await sendSignedTransaction(signedTx)
 
-    //parseFinalExecutionOutcome(executionOutcome);
-    
     // TODO: if Tx is Unknown or Started.
     let ret: FinalExecutionOutcome = {
         status: ExecutionStatusBasic.Pending,
@@ -291,6 +271,42 @@ export async function sendTransactionAndParseResult(actions: TX.Action[], signer
     };
 
     return ret;
+}
+
+//-------------------------------
+export async function sendTransaction2(accessKey: any, actions: TX.Action[], signerId: string, receiver: string, privateKey: string)
+    : Promise<FinalExecutionOutcome> {
+
+    const [txHash, signedTx] = await signTransaction2(accessKey, actions, signerId, receiver, privateKey)
+
+    const executionOutcome = await sendSignedTransaction(signedTx)
+    // TODO: if Tx is Unknown or Started.
+    let ret: FinalExecutionOutcome = {
+        status: ExecutionStatusBasic.Pending,
+        transaction: signedTx.transaction,
+        transaction_outcome: {
+            id: bs58.encode(txHash),
+            outcome: undefined,
+        },
+        receipts_outcome: [],
+        final_execution_status: 'NONE'
+    };
+
+    return ret;
+    
+}
+
+//-------------------------------
+export async function sendTransactionAndParseResult(actions: TX.Action[], signerId: string, receiver: string, privateKey: string)
+    : Promise<FinalExecutionOutcome> {
+
+    const [txHash, signedTx] = await signTransaction(actions, signerId, receiver, privateKey)
+
+    const executionOutcome = await sendSignedTransaction(signedTx)
+
+    parseFinalExecutionOutcome(executionOutcome);
+
+    return executionOutcome;
 }
 
 //-------------------------------
