@@ -10,7 +10,7 @@ import { sha256Async } from '../crypto-lite/crypto-primitives-browser.js';
 
 import { log } from "../log.js"
 import { decodeBase64, encodeBase64, stringFromArray, stringFromUint8Array, Uint8ArrayFromString } from "../crypto-lite/encode.js";
-import { FinalExecutionOutcome, FinalExecutionStatus, FinalExecutionStatusBasic } from "./unc-types.js";
+import { FinalExecutionOutcome, FinalExecutionStatus, ExecutionStatusBasic } from "./unc-types.js";
 
 
 //---------------------------
@@ -280,7 +280,7 @@ export async function sendTransactionAndParseResult(actions: TX.Action[], signer
     
     // TODO: if Tx is Unknown or Started.
     let ret: FinalExecutionOutcome = {
-        status: FinalExecutionStatusBasic.Started,
+        status: ExecutionStatusBasic.Pending,
         transaction: signedTx.transaction,
         transaction_outcome: {
             id: bs58.encode(txHash),

@@ -38,11 +38,7 @@ export interface ExecutionStatus {
     SuccessReceiptId?: string;
     Failure?: ExecutionError;
 }
-export declare enum FinalExecutionStatusBasic {
-    NotStarted = "NotStarted",
-    Started = "Started",
-    Failure = "Failure"
-}
+
 export interface ExecutionError {
     error_message: string;
     error_type: string;
@@ -65,7 +61,7 @@ export interface ExecutionOutcome {
 }
 export interface FinalExecutionOutcome {
     final_execution_status: TxExecutionStatus;
-    status: FinalExecutionStatus | FinalExecutionStatusBasic;
+    status: FinalExecutionStatus | ExecutionStatusBasic;
     transaction: any;
     transaction_outcome: ExecutionOutcomeWithId;
     receipts_outcome: ExecutionOutcomeWithId[];
