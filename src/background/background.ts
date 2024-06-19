@@ -4,7 +4,7 @@ import { log, logEnabled } from "../lib/log.js";
 import * as Network from "../lib/unc-api-lite/network.js";
 //import * as nearAccounts from "../util/search-accounts.js";
 
-import * as near from "../lib/unc-api-lite/near-rpc.js";
+import * as near from "../lib/unc-api-lite/unc-rpc.js";
 import { localStorageSet, localStorageGet } from "../data/local-storage.js";
 import * as TX from "../lib/unc-api-lite/transaction.js";
 
@@ -21,7 +21,7 @@ import {
   state, stateIsEmpty, unlockSecureStateAsync, unlockSecureStateSHA
 } from "./background-state.js";
 import { Asset, assetAddHistory, assetAmount, findAsset, History, setAssetBalanceYoctos } from "../structs/account-info.js";
-import { FinalExecutionOutcome } from "../lib/unc-api-lite/near-types.js";
+import { FinalExecutionOutcome } from "../lib/unc-api-lite/unc-types.js";
 import { askBackgroundGetNetworkInfo } from "../askBackground.js";
 
 

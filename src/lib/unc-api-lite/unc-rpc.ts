@@ -10,7 +10,7 @@ import { sha256Async } from '../crypto-lite/crypto-primitives-browser.js';
 
 import { log } from "../log.js"
 import { decodeBase64, encodeBase64, stringFromArray, stringFromUint8Array, Uint8ArrayFromString } from "../crypto-lite/encode.js";
-import { FinalExecutionOutcome, FinalExecutionStatus } from "./near-types.js";
+import { FinalExecutionOutcome, FinalExecutionStatus } from "./unc-types.js";
 
 
 //---------------------------
@@ -276,7 +276,7 @@ export async function sendTransactionAndParseResult(actions: TX.Action[], signer
 
     const executionOutcome = await sendSignedTransaction(signedTx)
 
-    parseFinalExecutionOutcome(executionOutcome);
+    //parseFinalExecutionOutcome(executionOutcome);
     
     // TODO: if Tx is Unknown or Started.
     let ret: FinalExecutionOutcome = {
