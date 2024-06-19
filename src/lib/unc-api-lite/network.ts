@@ -15,23 +15,23 @@ export type NetworkInfo = {
   
 export const NetworkList:NetworkInfo[] = [
 
-  { name: "mainnet", rootAccount: "unc", displayName: "Utility Mainnet", color: "green", 
+  { name: "mainnet", rootAccount: "", displayName: "Utility Mainnet", color: "green", 
       rpc: "https://unc-test.jongun2038.win/", explorerUrl: "https://explorer.xx.org/", NearWebWalletUrl:"https://wallet.xx.org/",
       liquidStakingContract: "meta-pool.near", liquidStakingGovToken: "meta-token.near",
   },
 
-  { name: "testnet", rootAccount: "testnet", displayName: "Utility Testnet", color: "yellow", 
+  { name: "testnet", rootAccount: "", displayName: "Utility Testnet", color: "yellow", 
       rpc: "https://unc-test.jongun2038.win/", explorerUrl: "https://explorer.testnet.xx.org/", NearWebWalletUrl:"https://wallet.testnet.xx.org/", 
       liquidStakingContract: "meta-v2.pool.testnet", liquidStakingGovToken: "token.meta.pool.testnet",
   },
 
-  { name: "local", rootAccount: "local", displayName: "Local Network", color: "red", 
+  { name: "local", rootAccount: "", displayName: "Local Network", color: "red", 
     rpc: "http://127.0.0.1:3030", explorerUrl: "http://127.0.0.1/explorer/", NearWebWalletUrl:"http://127.0..0.1/wallet/",  
     liquidStakingContract: "meta.pool.local", liquidStakingGovToken: "token.meta.pool.local",
   },
 ];
 
-export const defaultName = "mainnet"; //default network
+export const defaultName = "testnet"; //default network
 export let current = defaultName;
 
 export function setCurrent(networkName:string):void {
