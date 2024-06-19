@@ -2,7 +2,7 @@
 
 ## Installation
 
-Install [Mywallets v4 from the Chrome Web Store](https://chrome.google.com/webstore/detail/narwallets-v4/lkpeokpdkmcdaiadpmnnpimlgmdobkdj)
+Install [Mywallets v1 from the Chrome Web Store](https://chrome.google.com/webstore/detail/mywallets-v1/lkpeokpdkmcdaiadpmnnpimlgmdobkdj)
 
 ## Objectives
 
@@ -80,17 +80,17 @@ Bundle includes:
 
 ### Clone this repository and run as unpacked extension
 
-* `git clone https://github.com/Mywallets/narwallets-extension.git`
-* `cd narwallets-extension`
+* `git clone https://github.com/Mywallets/mywallets-extension.git`
+* `cd mywallets-extension`
 * install packages: `npm install`
 * compile: `npm run build`
 * open chrome
 * enable Extensions Developer Mode
-* load unpacked extension from [your-repos-dir]/narwallets-extension/extension
+* load unpacked extension from [your-repos-dir]/mywallets-extension/extension
 
 ### When new versions of the code are pushed
 
-* `cd narwallets-extension`
+* `cd mywallets-extension`
 * get changes: `git pull`
 * install packages: `npm install` (in case there were changes)
 * compile: `npm run build`
