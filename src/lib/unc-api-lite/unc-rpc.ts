@@ -10,7 +10,7 @@ import { sha256Async } from '../crypto-lite/crypto-primitives-browser.js';
 
 import { log } from "../log.js"
 import { decodeBase64, encodeBase64, stringFromArray, stringFromUint8Array, Uint8ArrayFromString } from "../crypto-lite/encode.js";
-import { FinalExecutionOutcome, FinalExecutionStatus } from "./unc-types.js";
+import { FinalExecutionOutcome, FinalExecutionStatus, FinalExecutionStatusBasic } from "./unc-types.js";
 
 
 //---------------------------
