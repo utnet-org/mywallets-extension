@@ -1,7 +1,8 @@
 declare type BlockHash = string;
 declare type BlockHeight = number;
 declare type BlockId = BlockHash | BlockHeight;
-declare type Finality = 'optimistic' | 'near-final' | 'final';
+declare type Finality = 'optimistic' | 'unc-final' | 'final';
+declare type TxExecutionStatus = 'NONE' | 'INCLUDED' | 'INCLUDED_FINAL' | 'EXECUTED' | 'FINAL' | 'EXECUTED_OPTIMISTIC';
 declare type BlockReference = {
     blockId: BlockId;
 } | {
@@ -40,16 +41,19 @@ interface ExecutionOutcome {
     logs: string[];
     receipt_ids: string[];
     gas_burnt: number;
+    tokens_burnt: string;
+    executor_id: string;
     status: ExecutionStatus | ExecutionStatusBasic;
 }
 interface FinalExecutionOutcome {
-    status: FinalExecutionStatus | FinalExecutionStatusBasic;
+    final_execution_status: TxExecutionStatus;
+    status: FinalExecutionStatus | ExecutionStatusBasic;
     transaction: any;
     transaction_outcome: ExecutionOutcomeWithId;
     receipts_outcome: ExecutionOutcomeWithId[];
 }
 
-// From https://github.com/near/NEPs/blob/master/specs/Standards/Wallets/InjectedWallets.md
+// From https://github.com/unc/blob/master/specs/Standards/Wallets/InjectedWallets.md
 /************* Start extracted from web3-api-js **************/
 
 declare class FunctionCallPermission {
@@ -229,7 +233,7 @@ async function connect(params: ConnectParams): Promise<Array<Account>> {
 
 /**
  * Add FunctionCall access key(s) for one or more accounts. This request should require explicit approval from the user.
- * https://docs.near.org/concepts/basics/accounts/access-keys
+ * https://docs.unc.org/concepts/basics/accounts/access-keys
  * @param params 
  * @returns 
  */

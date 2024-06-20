@@ -33,7 +33,7 @@ import {
   askBackgroundCallMethod,
   askBackgroundGetOptions,
   askBackgroundGetValidators,
-  askBackgroundTransferNear,
+  askBackgroundTransferUnc,
   askBackgroundGetAccessKey,
   askBackgroundAllNetworkAccounts,
   askBackgroundSetAccount,
@@ -86,7 +86,7 @@ import { NetworkInfo } from "../lib/unc-api-lite/network.js";
 import { autoRefresh} from "../index.js";
 import { closePopupList, popupComboConfigure, PopupItem, popupListOpen } from "../util/popup-list.js";
 import { tryAsyncRefreshAccountInfoLastBalance, ExtendedAccountData } from "../extendedAccountData.js";
-import { getMywalletsMetrics, mywalletsMetrics, nearDollarPrice } from "../data/price-data.js";
+import { getMywalletsMetrics, mywalletsMetrics, uncDollarPrice } from "../data/price-data.js";
 import { Asset, assetDivId, ASSET_HISTORY_TEMPLATE, findAsset, History, setAssetBalanceYoctos } from "../structs/account-info.js";
 
 const ACCOUNT_SELECTED = "account-selected";
@@ -260,7 +260,7 @@ export async function refreshSelectedAccountAndAssets() {
       const el = document.querySelector("#selected-asset #balance") as HTMLElement;
       if (el) {
         el.innerText = c.toStringDec(asset.balance);
-        if (nearDollarPrice) {
+        if (uncDollarPrice) {
           usdPriceReady();
         }
       }
@@ -279,7 +279,7 @@ export async function refreshSelectedAccountAndAssets() {
 
 export async function usdPriceReady() {
   if (selectedAccountData == undefined) return;
-  if (selectedAccountData.total) selectedAccountData.totalUSD = selectedAccountData.total * nearDollarPrice;
+  if (selectedAccountData.total) selectedAccountData.totalUSD = selectedAccountData.total * uncDollarPrice;
   const selector = ".accountdetsfiat"
   if (document.querySelectorAll(selector).length == 0) return;
   const elems = d.all(selector)
@@ -290,13 +290,13 @@ export async function usdPriceReady() {
     // if (Pages.lastSelectedAsset.balance != undefined) {
     //   if (Pages.lastSelectedAsset.symbol == "STUNC") {
     //     await getMywalletsMetrics()
-    //     if (mywalletsMetrics) assetUsdValue = Pages.lastSelectedAsset.balance * mywalletsMetrics.st_near_price * nearDollarPrice;
+    //     if (mywalletsMetrics) assetUsdValue = Pages.lastSelectedAsset.balance * mywalletsMetrics.st_unc_price * uncDollarPrice;
     //   }
     //   else if (Pages.lastSelectedAsset.symbol == "STAKED"
     //     || Pages.lastSelectedAsset.symbol == "UNSTAKED"
     //     || Pages.lastSelectedAsset.symbol == "wUNC"
     //   ) {
-    //     assetUsdValue = Pages.lastSelectedAsset.balance * nearDollarPrice;
+    //     assetUsdValue = Pages.lastSelectedAsset.balance * uncDollarPrice;
     //   }
     // }
     const elems = d.all(".asset_in_usd")
@@ -365,19 +365,19 @@ export function getKnownNEP141Contracts(): PopupItem[] {
     ]
   } else {
     return [
-      { text: "stUNC - meta-pool.near", value: "meta-pool.near" },
-      { text: "$META - meta-token.near", value: "meta-token.near" },
-      { text: "xREF - ref.finance", value: "xtoken.ref-finance.near" },
-      { text: "Paras - token.paras.near", value: "token.paras.near" },
-      { text: "wUNC - wrap.near", value: "wrap.near" },
-      { text: "nWBTC- (bridged)", value: "2260fac5e5542a773aa44fbcfedf7c193bc2c599.factory.bridge.near" },
-      { text: "nUSDT- (bridged)", value: "dac17f958d2ee523a2206206994597c13d831ec7.factory.bridge.near" },
-      { text: "nUSDC- (bridged)", value: "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near" },
-      { text: "nDAI - (bridged)", value: "6b175474e89094c44da98b954eedeac495271d0f.factory.bridge.near" },
-      { text: "nUNI - (bridged)", value: "1f9840a85d5af5bf1d1762f925bdaddc4201f984.factory.bridge.near" },
-      { text: "nLINK- (bridged)", value: "514910771af9ca656af840dff83e8264ecf986ca.factory.bridge.near" },
-      { text: "BANANA - berryclub.ek.near", value: "berryclub.ek.near" },
-      { text: "DBIO - dbio.near", value: "dbio.near" },
+      { text: "stUNC - meta-pool.unc", value: "meta-pool.unc" },
+      { text: "$META - meta-token.unc", value: "meta-token.unc" },
+      { text: "xREF - ref.finance", value: "xtoken.ref-finance.unc" },
+      { text: "Paras - token.paras.unc", value: "token.paras.unc" },
+      { text: "wUNC - wrap.unc", value: "wrap.unc" },
+      { text: "nWBTC- (bridged)", value: "2260fac5e5542a773aa44fbcfedf7c193bc2c599.factory.bridge.unc" },
+      { text: "nUSDT- (bridged)", value: "dac17f958d2ee523a2206206994597c13d831ec7.factory.bridge.unc" },
+      { text: "nUSDC- (bridged)", value: "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.unc" },
+      { text: "nDAI - (bridged)", value: "6b175474e89094c44da98b954eedeac495271d0f.factory.bridge.unc" },
+      { text: "nUNI - (bridged)", value: "1f9840a85d5af5bf1d1762f925bdaddc4201f984.factory.bridge.unc" },
+      { text: "nLINK- (bridged)", value: "514910771af9ca656af840dff83e8264ecf986ca.factory.bridge.unc" },
+      { text: "BANANA - berryclub.ek.unc", value: "berryclub.ek.unc" },
+      { text: "DBIO - dbio.unc", value: "dbio.unc" },
     ]
   }
 }
@@ -476,20 +476,20 @@ function assetSorter(asset1: Asset, asset2: Asset): number {
 type DivIdField = { divId: string };
 
 export function getUsdValue(asset: Asset): string {
-  if (!nearDollarPrice || !asset.balance) return "";
+  if (!uncDollarPrice || !asset.balance) return "";
   let assetUsdValue;
   if (asset.symbol == "STUNC" && mywalletsMetrics) {
-    assetUsdValue = asset.balance * mywalletsMetrics.st_near_price * nearDollarPrice;
+    assetUsdValue = asset.balance * mywalletsMetrics.st_unc_price * uncDollarPrice;
   }
   else if (asset.symbol == "$META" && mywalletsMetrics) {
-    assetUsdValue = asset.balance * mywalletsMetrics.ref_meta_price * mywalletsMetrics.st_near_price * nearDollarPrice;
+    assetUsdValue = asset.balance * mywalletsMetrics.ref_meta_price * mywalletsMetrics.st_unc_price * uncDollarPrice;
   }
 
   else if (asset.symbol == "STAKED"
     || asset.symbol == "UNSTAKED"
     || asset.symbol == "wUNC"
   ) {
-    assetUsdValue = asset.balance * nearDollarPrice;
+    assetUsdValue = asset.balance * uncDollarPrice;
   }
   else {
     return "";
@@ -561,7 +561,7 @@ function updateAccountHeaderDOM() {
   const accountNameDiv = document.querySelector("#selected-account .accountdetscuenta") as HTMLElement;
   if (accountNameDiv) accountNameDiv.addEventListener(d.CLICK, selectAccountPopupList)
 
-  if (nearDollarPrice) {
+  if (uncDollarPrice) {
     usdPriceReady();
   }
 
@@ -866,7 +866,7 @@ async function performSend() {
     disableOKCancel();
     d.showWait();
 
-    await askBackgroundTransferNear(
+    await askBackgroundTransferUnc(
       selectedAccountData.name,
       toAccName,
       c.ntoy(amountToSend)
@@ -1105,7 +1105,7 @@ async function performStake() {
           { amount: amountToStakeY },
           selectedAccountData.name
         );
-        //await near.call_method(newStakingPool, "stake", {amount:amountToStakeY}, selectedAccountData.name, selectedAccountData.accountInfo.privateKey, near.ONE_TGAS.muln(125))
+        //await unc.call_method(newStakingPool, "stake", {amount:amountToStakeY}, selectedAccountData.name, selectedAccountData.accountInfo.privateKey, unc.ONE_TGAS.muln(125))
       }
     } else {
       //no unstaked funds
@@ -1126,7 +1126,7 @@ async function performStake() {
           "get_account_info",
           { account_id: selectedAccountData.name }
         );
-        newBalance = metaPoolResult.st_near;
+        newBalance = metaPoolResult.st_unc;
       } else {
         poolAccInfo = await StakingPool.getAccInfo(
           selectedAccountData.name,
@@ -1170,10 +1170,10 @@ async function performStake() {
       }
       selectedAccountData.accountInfo.history.unshift(hist);
 
-      // await near.call_method(newStakingPool, "deposit_and_stake", {},
+      // await unc.call_method(newStakingPool, "deposit_and_stake", {},
       //     selectedAccountData.name,
       //     selectedAccountData.accountInfo.privateKey,
-      //     near.ONE_TGAS.muln(125),
+      //     unc.ONE_TGAS.muln(125),
       //     amountToStake
       // )
     }
@@ -1391,7 +1391,7 @@ async function detailedRewardsClicked() {
     d.showErr("This function is only available in mainnet");
   } else {
     chrome.windows.create({
-      url: "https://near-staking.com/user/" + selectedAccountData.name,
+      url: "https://unc-staking.com/user/" + selectedAccountData.name,
       state: "maximized",
     });
   }

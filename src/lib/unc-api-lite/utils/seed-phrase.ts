@@ -1,7 +1,7 @@
 import * as bs58 from "../../crypto-lite/bs58.js"
 
 import {mnemonicToSeedAsync, generateMnemonicAsync} from "../../crypto-lite/bip39.js"
-import {derivePathAsync} from "./near-hd-key.js"
+import {derivePathAsync} from "./unc-hd-key.js"
 
 import {sign_keyPair_fromSeed} from "../../tweetnacl/sign.js"
 

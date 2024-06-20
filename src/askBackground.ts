@@ -18,7 +18,7 @@ export function askBackground(requestPayload: any): Promise<any> {
     log("askBackground ", JSON.stringify(requestPayload));
     const timeout = setTimeout(() => {
       return reject(Error("askBackground timeout"));
-    }, 30000);
+    }, 10000);
     chrome.runtime.sendMessage(requestPayload, function (response) {
       clearTimeout(timeout);
       //-- DEBUG
@@ -159,7 +159,7 @@ export function askBackgroundCallMethod(
   return askBackground({ code: "apply", signerId: signerId, tx: batchTx });
 }
 
-export function askBackgroundTransferNear(
+export function askBackgroundTransferUnc(
   fromAccountId: string,
   receiverId: string,
   attached: string

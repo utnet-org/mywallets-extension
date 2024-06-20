@@ -3,7 +3,7 @@ import * as d from "../util/document.js"
 
 import { sha256Async } from "../lib/crypto-lite/crypto-primitives-browser.js"
 
-//import * as near from "../api/near-rpc.js";
+//import * as unc from "../api/unc-rpc.js";
 import * as StakingPool from "./staking-pool.js";
 //import * as TX from "../api/transaction.js";
 import { isValidAccountID, CheckValidAmount } from "../lib/unc-api-lite/utils/valid.js";
@@ -70,7 +70,7 @@ export class LockupContract {
       this.accountInfo.lastBalanceTimestamp = Date.now()
       firstOneOK = true;
 
-      // 35 is the reserve for storage for old lockups https://github.com/near/core-contracts/blob/master/lockup/src/lib.rs
+      // 35 is the reserve for storage for old lockups https://github.com/unc/core-contracts/blob/master/lockup/src/lib.rs
       this.accountBalanceYoctos = (BigInt(stateResultYoctos.amount) - BigInt(c.ntoy(35))).toString() // note: get_account_balance is not published in the lockup contract -- await this.getAmount("get_account_balance")
       //this.liquidBalance = await this.getAmount("get_liquid_owners_balance")
 
@@ -78,7 +78,7 @@ export class LockupContract {
       const locked = await this.getAmount("get_locked_amount")
 
       //this.accountInfo.lastBalance = ownerBal + locked
-      this.accountInfo.lockedOther = locked + 35 //35 extra near required for lockup-contracts
+      this.accountInfo.lockedOther = locked + 35 //35 extra unc required for lockup-contracts
       // const contractKnownPoolDeposited = await this.getAmount(
       //   "get_known_deposited_balance"
       // );

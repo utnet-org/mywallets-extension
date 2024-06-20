@@ -39,7 +39,7 @@ export function formatJSONErr(obj: any): any {
     //---------
     //try some enhancements
     //---------
-    //convert yoctos to near
+    //convert yoctos to unc
     const largeNumbersFound = text.match(/\d{14,50}/g)
     if (largeNumbersFound) {
         for (const matches of largeNumbersFound) {

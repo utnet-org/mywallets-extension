@@ -12,7 +12,7 @@ import { MetaPoolContractState, GetAccountInfoResult, LiquidUnstakeResult, Remov
 //singleton class
 export class MetaPool extends SmartContract {
 
-    /// returns JSON string according to [NEP-129](https://github.com/nearprotocol/NEPs/pull/129)
+    /// returns JSON string according to [NEP-129](https://github.com/uncprotocol/NEPs/pull/129)
     get_contract_info(): Promise<ContractInfo> {
         return this.view("get_contract_info")
     }
@@ -26,15 +26,15 @@ export class MetaPool extends SmartContract {
         return this.view("get_account_info", { account_id: accountId || this.signerId })
     }
 
-    deposit(nearsToDeposit: number): Promise<void> {
-        return this.call("deposit", {}, TGas(25), ntoy(nearsToDeposit))
+    deposit(uncsToDeposit: number): Promise<void> {
+        return this.call("deposit", {}, TGas(25), ntoy(uncsToDeposit))
     }
-    withdraw(nearsToWithdraw: number): Promise<void> {
-        return this.call("withdraw", { amount: ntoy(nearsToWithdraw) })
+    withdraw(uncsToWithdraw: number): Promise<void> {
+        return this.call("withdraw", { amount: ntoy(uncsToWithdraw) })
     }
 
-    deposit_and_stake(nearsToDeposit: number): Promise<void> {
-        return this.call("deposit_and_stake", {}, TGas(50), ntoy(nearsToDeposit))
+    deposit_and_stake(uncsToDeposit: number): Promise<void> {
+        return this.call("deposit_and_stake", {}, TGas(50), ntoy(uncsToDeposit))
     }
 
     stake(amount: number): Promise<void> {
@@ -59,24 +59,24 @@ export class MetaPool extends SmartContract {
         return this.call("withdraw_unstaked", {})
     }
 
-    //buy stnear/stake
-    buy_stnear_stake(amount: number): Promise<void> {
-        return this.call("buy_stnear_stake", { "amount": ntoy(amount) })
+    //buy stunc/stake
+    buy_stunc_stake(amount: number): Promise<void> {
+        return this.call("buy_stunc_stake", { "amount": ntoy(amount) })
     }
 
     //return potential NEARs to receive
-    get_near_amount_sell_stnear(stnearToSell: number): Promise<U128String> {
-        return this.view("get_near_amount_sell_stnear", { "stnear_to_sell": ntoy(stnearToSell) })
+    get_unc_amount_sell_stunc(stuncToSell: number): Promise<U128String> {
+        return this.view("get_unc_amount_sell_stunc", { "stunc_to_sell": ntoy(stuncToSell) })
     }
 
-    //sell stnear & return NEARs received
-    liquid_unstake(stnearToBurn: number, minExpectedNear: number): Promise<LiquidUnstakeResult> {
-        return this.call("liquid_unstake", { "st_near_to_burn": ntoy(stnearToBurn), "min_expected_near": ntoy(minExpectedNear) }, TGas(75)) //1 yocto hack
+    //sell stunc & return NEARs received
+    liquid_unstake(stuncToBurn: number, minExpectedNear: number): Promise<LiquidUnstakeResult> {
+        return this.call("liquid_unstake", { "st_unc_to_burn": ntoy(stuncToBurn), "min_expected_unc": ntoy(minExpectedNear) }, TGas(75)) //1 yocto hack
     }
 
     //current fee for liquidity providers
-    nslp_get_discount_basis_points(stnearToSell: number): Promise<number> {
-        return this.view("nslp_get_discount_basis_points", { "stnear_to_sell": ntoy(stnearToSell) })
+    nslp_get_discount_basis_points(stuncToSell: number): Promise<number> {
+        return this.view("nslp_get_discount_basis_points", { "stunc_to_sell": ntoy(stuncToSell) })
     }
 
     //add liquidity

@@ -13,12 +13,12 @@ const b1e24 = b1e(24);
 export function TGas(tgas: number): string {
     return (BigInt(tgas) * b1e12).toString(); // tgas*1e12 // Note: gas is u64
 }
-export function ntoy(near: number): string {
-    return (BigInt(Math.trunc(near * 1e6)) * b1e18).toString(); // near*1e24 // Note: YoctoNear is u128
+export function ntoy(unc: number): string {
+    return (BigInt(Math.trunc(unc * 1e6)) * b1e18).toString(); // unc*1e24 // Note: YoctoNear is u128
 }
 /// use up-to 6 decimals from user's input
-export function nToYD(near: number, decimals: number): string {
-    return (BigInt(Math.trunc(near * 1e6)) * b1e(decimals - 6)).toString(); // use up-to 6 decimals from user input
+export function nToYD(unc: number, decimals: number): string {
+    return (BigInt(Math.trunc(unc * 1e6)) * b1e(decimals - 6)).toString(); // use up-to 6 decimals from user input
 }
 
 /**

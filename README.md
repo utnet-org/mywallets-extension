@@ -27,7 +27,7 @@ The good:
 * Accounts are first added to in safe-by-default read-only mode (no keys)
 * All private data is stored encrypted on chrome local storage
 
-* [x] Create free *implict accounts* (no near required)
+* [x] Create free *implict accounts* (no $unc required)
 * [x] Lockup contract accounts are auto-discovered and treated as another account in the group
 * [x] Advanced mode allows you to take full control of your lockup contract account
 * [x] Integration with DApps. New model: wallet initiated connection to active tab, resulting in chain & wallet agnostic DApps. See [Wallet integration API Documentation here](API-design.md)

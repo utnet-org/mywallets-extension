@@ -6,10 +6,10 @@ export type GetAccountInfoResult = {
     /// The available balance that can be withdrawn
     available: U128String,
     /// The amount of stNEAR owned (the shares owned)
-    st_near: U128String,
-    /// The amount of Utility owner (st_near * stNEAR_price)
-    valued_st_near: U128String,
-    /// The amount of rewards (rewards = total_staked - stnear_amount) and (total_owned = stnear + rewards)
+    st_unc: U128String,
+    /// The amount of Utility owner (st_unc * stNEAR_price)
+    valued_st_unc: U128String,
+    /// The amount of rewards (rewards = total_staked - stunc_amount) and (total_owned = stunc + rewards)
     unstaked: U128String,
     /// The epoch height when the unstaked was requested
     /// The fund will be locked for NUM_EPOCHS_TO_UNLOCK epochs
@@ -26,15 +26,15 @@ export type GetAccountInfoResult = {
     // These fields works as a car's "trip meter". The user can reset them to zero.
     /// trip_start: (timestamp in nanoseconds) this field is set at account creation, so it will start metering rewards
     trip_start: string, //U64,
-    /// How much stnear the user had at "trip_start". 
-    trip_start_stnear: U128String,
+    /// How much stunc the user had at "trip_start". 
+    trip_start_stunc: U128String,
     /// how much the user staked since trip start. always incremented
     trip_accum_stakes: U128String,
     /// how much the user unstaked since trip start. always incremented
     trip_accum_unstakes: U128String,
-    /// to compute trip_rewards we start from current_stnear, undo unstakes, undo stakes and finally subtract trip_start_stnear
-    /// trip_rewards = current_stnear + trip_accum_unstakes - trip_accum_stakes - trip_start_stnear;
-    /// trip_rewards = current_stnear + trip_accum_unstakes - trip_accum_stakes - trip_start_stnear;
+    /// to compute trip_rewards we start from current_stunc, undo unstakes, undo stakes and finally subtract trip_start_stunc
+    /// trip_rewards = current_stunc + trip_accum_unstakes - trip_accum_stakes - trip_start_stunc;
+    /// trip_rewards = current_stunc + trip_accum_unstakes - trip_accum_stakes - trip_start_stunc;
     trip_rewards: U128String,
 
     ///NS liquidity pool shares, if the user is a liquidity provider
@@ -64,11 +64,11 @@ export type MetaPoolContractState = {
     total_actually_staked: U128String,
 
     // how many "shares" were minted. Every time someone "stakes" he "buys pool shares" with the staked amount
-    // the share price is computed so if he "sells" the shares on that moment he recovers the same near amount
+    // the share price is computed so if he "sells" the shares on that moment he recovers the same unc amount
     // staking produces rewards, so share_price = total_for_staking/total_shares
-    // when someone "unstakes" she "burns" X shares at current price to recoup Y near
+    // when someone "unstakes" she "burns" X shares at current price to recoup Y unc
     total_stake_shares: U128String,
-    st_near_price: U128String,
+    st_unc_price: U128String,
 
     /// The total amount of tokens actually unstaked (the tokens are in the staking pools)
     /// During distribute(), If !staking_paused && total_for_unstaking<total_actually_unstaked, then the difference gets unstaked in 100kN batches
@@ -87,7 +87,7 @@ export type MetaPoolContractState = {
     accumulated_staked_rewards: U128String,
 
     nslp_liquidity: U128String,
-    nslp_stnear_balance: U128String,
+    nslp_stunc_balance: U128String,
     nslp_target: U128String,
     /// Current discount for immediate unstake (sell stNEAR)
     nslp_current_discount_basis_points: number,
@@ -139,12 +139,12 @@ export type StakingPoolJSONInfo = {
 }
 
 export type RemoveLiquidityResult = {
-    near: U128String,
-    st_near: U128String
+    unc: U128String,
+    st_unc: U128String
 }
 
 export type LiquidUnstakeResult = {
-    near: U128String,
+    unc: U128String,
     fee: U128String,
     meta: U128String,
 }

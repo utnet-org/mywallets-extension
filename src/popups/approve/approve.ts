@@ -138,7 +138,7 @@ function displaySingleTransactionParams(inx: number, params: any) {
     let toAdd: TxInfo = {
       action: `${action.methodName}(${JSON.stringify(action.args)})`,
       attached: (action.params.deposit != "0" && action.params.deposit != "1") ?
-        `with <span class="near">${removeDecZeroes(ytonFull(action.params.deposit))}</span> attached $UNC` : ""
+        `with <span class="unc">${removeDecZeroes(ytonFull(action.params.deposit))}</span> attached $UNC` : ""
     }
 
     switch (action.type) {
@@ -148,7 +148,7 @@ function displaySingleTransactionParams(inx: number, params: any) {
 
       case "Transfer":
         toAdd.action = ""
-        toAdd.attached = `transfer <span class="near">${ytonString(action.params.deposit)}</span> $UNC`
+        toAdd.attached = `transfer <span class="unc">${ytonString(action.params.deposit)}</span> $UNC`
         break;
 
       default:
@@ -159,7 +159,7 @@ function displaySingleTransactionParams(inx: number, params: any) {
     const TEMPLATE = `
     <li id="{name}">
       <div class="action">{action}</div>
-      <div class="attached-near">{attached}</div>
+      <div class="attached-unc">{attached}</div>
     </li>
     `;
     d.appendTemplateLI(txContainerId + "_actions", TEMPLATE, toAdd)

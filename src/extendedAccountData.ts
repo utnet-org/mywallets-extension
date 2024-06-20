@@ -3,7 +3,7 @@ import { getLockupContract } from "./util/search-accounts.js";
 
 import { activeNetworkInfo, askBackground, askBackgroundSetAccount, askBackgroundViewMethod } from "./askBackground.js";
 import { yton } from "./util/conversions.js";
-import { nearDollarPrice } from "./data/price-data.js";
+import { uncDollarPrice } from "./data/price-data.js";
 import { Account } from "./structs/account-info.js";
 
 
@@ -77,7 +77,7 @@ export class ExtendedAccountData {
     }
     else {
       this.total = this.accountInfo.lastBalance;
-      this.totalUSD = this.total * nearDollarPrice;
+      this.totalUSD = this.total * uncDollarPrice;
     }
   }
 

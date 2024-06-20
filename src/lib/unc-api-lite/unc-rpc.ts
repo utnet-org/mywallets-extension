@@ -36,12 +36,12 @@ export function decodeJsonFromResult(result: number[]): string {
 }
 
 /**
- * convert nears expressed as a js-number with MAX 4 decimals into a yoctos-string
- * @param n amount in near MAX 4 DECIMALS
+ * convert uncs expressed as a js-number with MAX 4 decimals into a yoctos-string
+ * @param n amount in unc MAX 4 DECIMALS
  */
 export function ntoy(n: number) {
-    let by1e4 = Math.round(n * 1e4).toString() // near * 1e4 - round
-    let yoctosText = by1e4 + "0".repeat(20) //  mul by 1e20 => yoctos = near * 1e(4+20)
+    let by1e4 = Math.round(n * 1e4).toString() // unc * 1e4 - round
+    let yoctosText = by1e4 + "0".repeat(20) //  mul by 1e20 => yoctos = unc * 1e(4+20)
     return yoctosText
 }
 
@@ -52,8 +52,8 @@ export function ntoy(n: number) {
 export function yton(yoctos: string) {
     if (yoctos.indexOf(".") !== -1) throw new Error("a yocto string can't have a decimal point: " + yoctos)
     let padded = yoctos.padStart(25, "0") //at least 0.xxx
-    let nearsText = padded.slice(0, -24) + "." + padded.slice(-24, -20) //add decimal point. Equivalent to near=yoctos/1e24 and truncate to 4 dec places
-    return Number(nearsText)
+    let uncsText = padded.slice(0, -24) + "." + padded.slice(-24, -20) //add decimal point. Equivalent to unc=yoctos/1e24 and truncate to 4 dec places
+    return Number(uncsText)
 }
 
 
@@ -71,7 +71,7 @@ export type StateResult = {
 }
 
 /* 
-near.state example result
+unc.state example result
 result: {
     amount: "27101097909936818225912322116"
     block_hash: "DoTW1Tpp3TpC9egBe1xFJbbEb6vYxbT33g9GHepiYL5a"

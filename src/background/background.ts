@@ -2,9 +2,9 @@ import * as c from "../util/conversions.js";
 import { log, logEnabled } from "../lib/log.js";
 
 import * as Network from "../lib/unc-api-lite/network.js";
-//import * as nearAccounts from "../util/search-accounts.js";
+//import * as uncAccounts from "../util/search-accounts.js";
 
-import * as near from "../lib/unc-api-lite/unc-rpc.js";
+import * as unc from "../lib/unc-api-lite/unc-rpc.js";
 import { localStorageSet, localStorageGet } from "../data/local-storage.js";
 import * as TX from "../lib/unc-api-lite/transaction.js";
 
@@ -289,8 +289,8 @@ async function waitForPopupToOpen(
 async function commitActions(accessKey: any, params: any, privateKey: string): Promise<FinalExecutionOutcome> {
   // re-hydrate action POJO as class instances, for the borsh serializer
   const rehydratedActions = params.actions.map((action: any) => createCorrespondingAction(action))
-  //console.log("calling near.sendTransaction2",rehydratedActions)
-  return near.sendTransaction2(
+  //console.log("calling unc.sendTransaction2",rehydratedActions)
+  return unc.sendTransaction2(
     accessKey,
     rehydratedActions,
     params.signerId,
@@ -537,19 +537,19 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
 
     case "get-validators": {
       //view-call request
-      return near.getValidators();
+      return unc.getValidators();
     }
     case "access-key": {
       //check access-key exists and get nonce
-      return near.access_key(msg.accountId, msg.publicKey);
+      return unc.access_key(msg.accountId, msg.publicKey);
     }
     case "query-unc-account": {
       //check access-key exists and get nonce
-      return near.queryAccount(msg.accountId);
+      return unc.queryAccount(msg.accountId);
     }
     case "view": {
       //view-call request
-      return near.view(msg.contract, msg.method, msg.args);
+      return unc.view(msg.contract, msg.method, msg.args);
     }
     case "set-address-book": {
       if (!msg.accountId) throw Error("!msg.accountId");
@@ -565,51 +565,51 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
       return
     }
 
-    // old v3 - not originated in wallet-connect
-    case "apply": {
-      // apply transaction request from popup
-      // {code:"apply", signerId:<account>, tx:BatchTransaction}
-      // V3: when resolved, extract result, send msg to content-script->page
-      // Note: V4 uses signAndSendTransaction and returns FinalExecutionOutcome (full return data, needs to be parsed to extract results)
-      const signerId = msg.signerId || "...";
-      const accInfo = getAccount(signerId);
-      if (!accInfo.privateKey) throw Error(`Mywallets: account ${signerId} is read-only`);
-      //convert wallet-api actions to near.TX.Action
-      const actions: TX.Action[] = [];
-      for (let item of msg.tx.items) {
-        //convert action
-        switch (item.action) {
-          case "call":
-            const f = item as FunctionCall;
-            actions.push(
-              TX.functionCall(
-                f.method,
-                f.args,
-                BigInt(f.gas),
-                BigInt(f.attached)
-              )
-            );
-            break;
-          case "transfer":
-            actions.push(TX.transfer(BigInt(item.attached)));
-            break;
-          case "delete":
-            const d = item as DeleteAccountToBeneficiary;
-            actions.push(TX.deleteAccount(d.beneficiaryAccountId));
-            break;
-          default:
-            throw Error("batchTx UNKNOWN item.action=" + item.action);
-        }
-      }
-      //returns the Promise required to complete this action
-      return near.sendTransactionAndParseResult(
-        actions,
-        signerId,
-        msg.tx.receiver,
-        accInfo.privateKey || ""
-      );
-    }
-      break
+    // // old version - not originated in wallet-connect
+    // case "apply": {
+    //   // apply transaction request from popup
+    //   // {code:"apply", signerId:<account>, tx:BatchTransaction}
+    //   // V3: when resolved, extract result, send msg to content-script->page
+    //   // Note: V4 uses signAndSendTransaction and returns FinalExecutionOutcome (full return data, needs to be parsed to extract results)
+    //   const signerId = msg.signerId || "...";
+    //   const accInfo = getAccount(signerId);
+    //   if (!accInfo.privateKey) throw Error(`Mywallets: account ${signerId} is read-only`);
+    //   //convert wallet-api actions to unc.TX.Action
+    //   const actions: TX.Action[] = [];
+    //   for (let item of msg.tx.items) {
+    //     //convert action
+    //     switch (item.action) {
+    //       case "call":
+    //         const f = item as FunctionCall;
+    //         actions.push(
+    //           TX.functionCall(
+    //             f.method,
+    //             f.args,
+    //             BigInt(f.gas),
+    //             BigInt(f.attached)
+    //           )
+    //         );
+    //         break;
+    //       case "transfer":
+    //         actions.push(TX.transfer(BigInt(item.attached)));
+    //         break;
+    //       case "delete":
+    //         const d = item as DeleteAccountToBeneficiary;
+    //         actions.push(TX.deleteAccount(d.beneficiaryAccountId));
+    //         break;
+    //       default:
+    //         throw Error("batchTx UNKNOWN item.action=" + item.action);
+    //     }
+    //   }
+    //   //returns the Promise required to complete this action
+    //   return unc.sendTransactionAndParseResult(
+    //     actions,
+    //     signerId,
+    //     msg.tx.receiver,
+    //     accInfo.privateKey || ""
+    //   );
+    // }
+    //   break
 
     // new v1 - wallet-connect mode
     // Note: sign-and-send-transaction should return a FinalExecutionOutcome struct
@@ -619,7 +619,7 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
         console.error(`account ${msg.params.signerId} is read-only`)
         throw Error(`account ${msg.params.signerId} is read-only`)
       }
-      const accessKey = await near.getAccessKey(msg.params.signerId, accInfo.privateKey)
+      const accessKey = await unc.getAccessKey(msg.params.signerId, accInfo.privateKey)
       return commitActions(accessKey, msg.params, accInfo.privateKey)
     }
 
@@ -634,7 +634,7 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
       if (!accInfo.privateKey) {
         throw Error(`account ${signerId} is read-only`)
       }
-      const accessKey = await near.getAccessKey(signerId, accInfo.privateKey)
+      const accessKey = await unc.getAccessKey(signerId, accInfo.privateKey)
       for (let tx of msg.params) {
         promises.push(commitActions(accessKey, tx, accInfo.privateKey))
       }
@@ -727,7 +727,7 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
 //       break;
 
 //     case "get-account-balance":
-//       near
+//       unc
 //         .queryAccount(msg.accountId)
 //         .then((data) => {
 //           resolvedMsg.data = data.amount; //if resolved ok, send msg to content-script->tab
@@ -740,7 +740,7 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
 //       break;
 
 //     case "get-account-state":
-//       near
+//       unc
 //         .queryAccount(msg.accountId)
 //         .then((data) => {
 //           resolvedMsg.data = data; //if resolved ok, send msg to content-script->tab
@@ -754,7 +754,7 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
 
 //     case "view":
 //       //view-call request
-//       near
+//       unc
 //         .view(msg.contract, msg.method, msg.args)
 //         .then((data) => {
 //           resolvedMsg.data = data; //if resolved ok, send msg to content-script->tab

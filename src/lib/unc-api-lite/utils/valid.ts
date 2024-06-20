@@ -1,5 +1,5 @@
 /**
- * check if this is a valid near account id (syntax-wise)
+ * check if this is a valid unc account id (syntax-wise)
  * @param accountId 
  */
 export function isValidAccountID(accountId: string): boolean {

@@ -10,8 +10,8 @@ export type Account = {
     order: number;
     network: string,
     type: "acc" | "lock.c",
-    lastBalance: number, // native balance from rpc:query/account & near state
-    lastBalanceTimestamp: number, // native balance from rpc:query/account & near state
+    lastBalance: number, // native balance from rpc:query/account & unc state
+    lastBalanceTimestamp: number, // native balance from rpc:query/account & unc state
     // stakingPool?: string;
     // staked: number = 0; // in the pool & staked
     // unstaked: number = 0; // in the pool & unstaked (maybe can withdraw)

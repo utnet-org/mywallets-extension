@@ -6,7 +6,7 @@
 // by having this classes we can make typescript help with type-checking and code suggestions
 //
 
-const DEFAULT_GAS="200"+"0".repeat(12);
+const DEFAULT_GAS="300"+"0".repeat(12);
 
 export class BatchTransaction {
     items: BatchAction[] = []

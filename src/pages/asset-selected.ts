@@ -59,7 +59,7 @@ import { MetaPoolContractState } from "../contracts/meta-pool-structs.js";
 import { backToSelectAccount, setLastSelectedAsset } from "./main.js";
 import { popupComboConfigure, popupListOpen } from "../util/popup-list.js";
 import { LockupContract } from "../contracts/LockupContract.js";
-import { nearDollarPrice } from "../data/price-data.js";
+import { uncDollarPrice } from "../data/price-data.js";
 import { Asset, assetAddHistory, ASSET_HISTORY_TEMPLATE, findAsset, findAssetIndex, History, setAssetBalanceYoctos } from "../structs/account-info.js";
 
 const THIS_PAGE = "AccountAssetDetail";
@@ -167,13 +167,13 @@ function inputChanged() {
   } else {
     const liquidity = BigInt(metaPoolContractData.nslp_liquidity);
     const receiveNear = BigInt(
-      c.ntoy(value * Number(c.ytonFull(metaPoolContractData.st_near_price)))
+      c.ntoy(value * Number(c.ytonFull(metaPoolContractData.st_unc_price)))
     );
     fee_bp = get_discount_basis_points(liquidity, receiveNear);
     const realReceive = BigInt(receiveNear - (receiveNear * BigInt(fee_bp)) / BigInt(10000));
-    const nearAmount = c.yton(realReceive.toString());
-    extraMsg = ` - receive ${c.toStringDec(nearAmount)} \u24c3`;
-    extraMsg += ` ~  ${c.toStringDec(nearAmount * nearDollarPrice)} USD`;
+    const uncAmount = c.yton(realReceive.toString());
+    extraMsg = ` - receive ${c.toStringDec(uncAmount)} \u24c3`;
+    extraMsg += ` ~  ${c.toStringDec(uncAmount * uncDollarPrice)} USD`;
     if (liquidity < realReceive) extraMsg = " - Not enough liquidity";
   }
   d.byId("fee-amount").innerText = `Fee: ${(
@@ -250,7 +250,7 @@ function renderAssetPage() {
   `;
   d.appendTemplateLI("selected-asset", TEMPLATE, templateData);
   // set asset (stNEAR only now) price
-  if (nearDollarPrice) { usdPriceReady() }
+  if (uncDollarPrice) { usdPriceReady() }
 
 
   d.clearContainer("asset-history-details");
@@ -500,7 +500,7 @@ async function LiquidUnstakeOk() {
     var liquidUnstakeResult = await askBackgroundCallMethod(
       actualSP,
       "liquid_unstake",
-      { st_near_to_burn: yoctosToUnstake, min_expected_near: "0" },
+      { st_unc_to_burn: yoctosToUnstake, min_expected_unc: "0" },
       selectedAccountData.name
     );
 
@@ -513,13 +513,13 @@ async function LiquidUnstakeOk() {
     showInitialSubPage();
     d.showSuccess(
       "Liquid unstaked " + c.toStringDec(c.yton(yoctosToUnstake)) + " stNEAR, received " +
-      c.toStringDec(c.yton(liquidUnstakeResult.near)) + " $UNC"
+      c.toStringDec(c.yton(liquidUnstakeResult.unc)) + " $UNC"
     );
 
     // leave this for last in case it fails to add the $META asset
-    if (liquidUnstakeResult.near != "0") {
+    if (liquidUnstakeResult.unc != "0") {
       // add also liquid-unstake to main account, with the $UNC amount received
-      let hist = new History("liquid-unstake", c.yton(liquidUnstakeResult.near));
+      let hist = new History("liquid-unstake", c.yton(liquidUnstakeResult.unc));
       selectedAccountData.accountInfo.history.unshift(hist)
     }
 

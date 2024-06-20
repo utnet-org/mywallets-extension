@@ -17,7 +17,7 @@ export const NetworkList:NetworkInfo[] = [
 
   { name: "mainnet", rootAccount: "", displayName: "Utility Mainnet", color: "green", 
       rpc: "https://unc-test.jongun2038.win/", explorerUrl: "https://explorer.xx.org/", NearWebWalletUrl:"https://wallet.xx.org/",
-      liquidStakingContract: "meta-pool.near", liquidStakingGovToken: "meta-token.near",
+      liquidStakingContract: "meta-pool.unc", liquidStakingGovToken: "meta-token.unc",
   },
 
   { name: "testnet", rootAccount: "", displayName: "Utility Testnet", color: "yellow", 
