@@ -130,7 +130,7 @@ export class Action extends Enum {
     deployContract!: DeployContract;
     functionCall!: FunctionCall;
     transfer!: Transfer;
-    stake!: Pledge;
+    pledge!: Pledge;
     addKey!: AddKey;
     deleteKey!: DeleteKey;
     deleteAccount!: DeleteAccount;

@@ -31,7 +31,7 @@ import type { NetworkInfo } from "./lib/unc-api-lite/network.js";
 import { hideOkCancel, OkCancelInit } from "./util/okCancel.js";
 import { closePopupList, initPopupHandlers } from "./util/popup-list.js";
 import { log, logEnabled } from "./lib/log.js";
-import { fetchNearDollarPrice } from "./data/price-data.js";
+import { fetchUncDollarPrice } from "./data/price-data.js";
 import { activeNetworkInfo } from "./askBackground.js";
 import { WALLET_SELECTOR_CODES } from "./background/background.js";
 
@@ -350,7 +350,7 @@ async function initPopup() {
 
   // Account_onNetworkChanged(activeNetworkInfo);
 
-  fetchNearDollarPrice();
+  fetchUncDollarPrice();
 
   initPopupHandlers()
 

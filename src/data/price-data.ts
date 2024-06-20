@@ -1,6 +1,6 @@
 
 export let uncDollarPrice: number = 0;
-export async function fetchNearDollarPrice() {
+export async function fetchUncDollarPrice() {
   try {
     let result = await fetch("https://api.diadata.org/v1/quotation/Utility");
     let response = await result.json();

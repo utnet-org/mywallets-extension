@@ -125,6 +125,7 @@ export const WALLET_SELECTOR_CODES = {
   SIGN_OUT: "sign-out",
   SIGN_IN: "sign-in",
   GET_ACCOUNT_ID: "get-account-id",
+  //APPLY: "apply",
   SIGN_AND_SEND_TRANSACTION: "sign-and-send-transaction",
   SIGN_AND_SEND_TRANSACTIONS: "sign-and-send-transactions",
   GET_NETWORK: "get-network",
@@ -601,6 +602,7 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
             throw Error("batchTx UNKNOWN item.action=" + item.action);
         }
       }
+
       //returns the Promise required to complete this action
       return unc.sendTransactionAndParseResult(
         actions,
@@ -609,7 +611,6 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
         accInfo.privateKey || ""
       );
     }
-      break
 
     // new v1 - wallet-connect mode
     // Note: sign-and-send-transaction should return a FinalExecutionOutcome struct

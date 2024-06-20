@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "chrome",
+        "request": "launch",
+        "name": "Debug Chrome Extension",
+        "webRoot": "${workspaceFolder}/extension",
+        "sourceMaps": true,
+        "runtimeArgs": [
+            "--load-extension=${workspaceFolder}/extension",
+            "--remote-debugging-port=9222"
+          ]
+      }
+    ]
+  }
+  
