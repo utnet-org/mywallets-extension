@@ -565,51 +565,51 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
       return
     }
 
-    // // old version - not originated in wallet-connect
-    // case "apply": {
-    //   // apply transaction request from popup
-    //   // {code:"apply", signerId:<account>, tx:BatchTransaction}
-    //   // V3: when resolved, extract result, send msg to content-script->page
-    //   // Note: V4 uses signAndSendTransaction and returns FinalExecutionOutcome (full return data, needs to be parsed to extract results)
-    //   const signerId = msg.signerId || "...";
-    //   const accInfo = getAccount(signerId);
-    //   if (!accInfo.privateKey) throw Error(`Mywallets: account ${signerId} is read-only`);
-    //   //convert wallet-api actions to unc.TX.Action
-    //   const actions: TX.Action[] = [];
-    //   for (let item of msg.tx.items) {
-    //     //convert action
-    //     switch (item.action) {
-    //       case "call":
-    //         const f = item as FunctionCall;
-    //         actions.push(
-    //           TX.functionCall(
-    //             f.method,
-    //             f.args,
-    //             BigInt(f.gas),
-    //             BigInt(f.attached)
-    //           )
-    //         );
-    //         break;
-    //       case "transfer":
-    //         actions.push(TX.transfer(BigInt(item.attached)));
-    //         break;
-    //       case "delete":
-    //         const d = item as DeleteAccountToBeneficiary;
-    //         actions.push(TX.deleteAccount(d.beneficiaryAccountId));
-    //         break;
-    //       default:
-    //         throw Error("batchTx UNKNOWN item.action=" + item.action);
-    //     }
-    //   }
-    //   //returns the Promise required to complete this action
-    //   return unc.sendTransactionAndParseResult(
-    //     actions,
-    //     signerId,
-    //     msg.tx.receiver,
-    //     accInfo.privateKey || ""
-    //   );
-    // }
-    //   break
+    // old version - not originated in wallet-connect
+    case "apply": {
+      // apply transaction request from popup
+      // {code:"apply", signerId:<account>, tx:BatchTransaction}
+      // V3: when resolved, extract result, send msg to content-script->page
+      // Note: V4 uses signAndSendTransaction and returns FinalExecutionOutcome (full return data, needs to be parsed to extract results)
+      const signerId = msg.signerId || "...";
+      const accInfo = getAccount(signerId);
+      if (!accInfo.privateKey) throw Error(`Mywallets: account ${signerId} is read-only`);
+      //convert wallet-api actions to unc.TX.Action
+      const actions: TX.Action[] = [];
+      for (let item of msg.tx.items) {
+        //convert action
+        switch (item.action) {
+          case "call":
+            const f = item as FunctionCall;
+            actions.push(
+              TX.functionCall(
+                f.method,
+                f.args,
+                BigInt(f.gas),
+                BigInt(f.attached)
+              )
+            );
+            break;
+          case "transfer":
+            actions.push(TX.transfer(BigInt(item.attached)));
+            break;
+          case "delete":
+            const d = item as DeleteAccountToBeneficiary;
+            actions.push(TX.deleteAccount(d.beneficiaryAccountId));
+            break;
+          default:
+            throw Error("batchTx UNKNOWN item.action=" + item.action);
+        }
+      }
+      //returns the Promise required to complete this action
+      return unc.sendTransactionAndParseResult(
+        actions,
+        signerId,
+        msg.tx.receiver,
+        accInfo.privateKey || ""
+      );
+    }
+      break
 
     // new v1 - wallet-connect mode
     // Note: sign-and-send-transaction should return a FinalExecutionOutcome struct
