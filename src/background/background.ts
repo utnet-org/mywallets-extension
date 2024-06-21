@@ -105,6 +105,7 @@ async function runtimeMessageHandlerAfterTryRetrieveData(
     getPromiseMsgFromPopup(msg)
       .then((data: any) => {
         //promise resolved OK
+        console.log("promise resolved, data", data)
         reflectTransfer(msg); // add history entries, move amounts if accounts are in the wallet
         sendResponse({ data: data });
       })

@@ -261,7 +261,7 @@ export async function sendTransaction(actions: TX.Action[], signerId: string, re
     // TODO: if Tx is Unknown or Started.
     let ret: FinalExecutionOutcome = {
         status: ExecutionStatusBasic.Pending,
-        transaction: signedTx.transaction,
+        transaction: null, //signedTx.transaction,
         transaction_outcome: {
             id: bs58.encode(txHash),
             outcome: undefined,
@@ -283,7 +283,7 @@ export async function sendTransaction2(accessKey: any, actions: TX.Action[], sig
     // TODO: if Tx is Unknown or Started.
     let ret: FinalExecutionOutcome = {
         status: ExecutionStatusBasic.Pending,
-        transaction: signedTx.transaction,
+        transaction: null, //signedTx.transaction,
         transaction_outcome: {
             id: bs58.encode(txHash),
             outcome: undefined,
@@ -307,7 +307,7 @@ export async function sendTransactionAndParseResult(actions: TX.Action[], signer
     // TODO: if Tx is Unknown or Started.
     let ret: FinalExecutionOutcome = {
         status: ExecutionStatusBasic.Pending,
-        transaction: signedTx.transaction,
+        transaction: null, //signedTx.transaction,
         transaction_outcome: {
             id: bs58.encode(txHash),
             outcome: undefined,
