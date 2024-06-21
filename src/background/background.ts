@@ -303,9 +303,9 @@ async function commitActions(accessKey: any, params: any, privateKey: string): P
 function createCorrespondingAction(action: any): TX.Action {
   switch (action.type) {
     case "FunctionCall":
-      return TX.functionCall(action.params.methodName, action.params.args, BigInt(action.params.gas).toString(), BigInt(action.params.deposit).toString())
+      return TX.functionCall(action.params.methodName, action.params.args, BigInt(action.params.gas), BigInt(action.params.deposit))
     case "Transfer":
-      return TX.transfer(BigInt(action.attached).toString())
+      return TX.transfer(BigInt(action.attached))
     case "DeleteAccount":
       return TX.deleteAccount(action.beneficiaryAccountId)
     default:
@@ -585,13 +585,13 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
               TX.functionCall(
                 f.method,
                 f.args,
-                BigInt(f.gas).toString(),
-                BigInt(f.attached).toString()
+                BigInt(f.gas),
+                BigInt(f.attached)
               )
             );
             break;
           case "transfer":
-            actions.push(TX.transfer(BigInt(item.attached).toString()));
+            actions.push(TX.transfer(BigInt(item.attached)));
             break;
           case "delete":
             const d = item as DeleteAccountToBeneficiary;

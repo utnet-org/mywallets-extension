@@ -244,7 +244,9 @@ export async function signTransaction2(accessKey: any, actions: TX.Action[], sig
 export function sendSignedTransaction(signedTransaction: TX.SignedTransaction): Promise<FinalExecutionOutcome> {
     const borshEncoded = signedTransaction.encode();
     const b64EncodedString = encodeBase64(borshEncoded)
-    return jsonRpc('broadcast_tx_async', [b64EncodedString]) as Promise<FinalExecutionOutcome>
+    return jsonRpc('send_tx', {
+        "signed_tx_base64": b64EncodedString,
+        "wait_until": "NONE"}) as Promise<FinalExecutionOutcome>
 };
 
 

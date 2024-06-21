@@ -1,7 +1,6 @@
 import { concatU8Arrays, fromBE, toBufferLE } from '../../crypto-lite/bigint-buffer.js';
 import * as bs58 from '../../crypto-lite/bs58.js';
 import { stringFromUint8Array, Uint8ArrayFromString } from '../../crypto-lite/encode.js';
-
 const INITIAL_LENGTH = 1024;
 
 export type Schema = Map<Function, any>;
@@ -193,7 +192,7 @@ export class BinaryReader {
 function serializeField(schema: Schema, fieldName: string, value: any, fieldType: any, writer: any) {
     try {
         // TODO: Handle missing values properly (make sure they never result in just skipped write)
-        if (typeof fieldType === 'string') {
+        if (typeof fieldType === 'string' || fieldType === 'u64' || fieldType === 'u128') {
             writer[`write_${fieldType}`](value);
         } else if (fieldType instanceof Array) {
             if (typeof fieldType[0] === 'number') {
@@ -266,7 +265,7 @@ export function serialize(schema: Schema, obj: any): Uint8Array {
 
 function deserializeField(schema: Schema, fieldName: string, fieldType: any, reader: BinaryReader): any {
     try {
-        if (typeof fieldType === 'string') {
+        if (typeof fieldType === 'string' || fieldType === 'u64' || fieldType === 'u128') {
             //@ts-ignore
             return reader[`read_${fieldType}`]();
         }
