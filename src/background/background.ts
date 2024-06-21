@@ -105,7 +105,6 @@ async function runtimeMessageHandlerAfterTryRetrieveData(
     getPromiseMsgFromPopup(msg)
       .then((data: any) => {
         //promise resolved OK
-        log("trusted msg", msg.code, "promise resolved OK", data)
         reflectTransfer(msg); // add history entries, move amounts if accounts are in the wallet
         sendResponse({ data: data });
       })
@@ -304,9 +303,9 @@ async function commitActions(accessKey: any, params: any, privateKey: string): P
 function createCorrespondingAction(action: any): TX.Action {
   switch (action.type) {
     case "FunctionCall":
-      return TX.functionCall(action.params.methodName, action.params.args, BigInt(action.params.gas), BigInt(action.params.deposit))
+      return TX.functionCall(action.params.methodName, action.params.args, BigInt(action.params.gas).toString(), BigInt(action.params.deposit).toString())
     case "Transfer":
-      return TX.transfer(BigInt(action.attached))
+      return TX.transfer(BigInt(action.attached).toString())
     case "DeleteAccount":
       return TX.deleteAccount(action.beneficiaryAccountId)
     default:
@@ -586,13 +585,13 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
               TX.functionCall(
                 f.method,
                 f.args,
-                BigInt(f.gas),
-                BigInt(f.attached)
+                BigInt(f.gas).toString(),
+                BigInt(f.attached).toString()
               )
             );
             break;
           case "transfer":
-            actions.push(TX.transfer(BigInt(item.attached)));
+            actions.push(TX.transfer(BigInt(item.attached).toString()));
             break;
           case "delete":
             const d = item as DeleteAccountToBeneficiary;

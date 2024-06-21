@@ -36,9 +36,9 @@ export class IAction extends Assignable { }
 
 class CreateAccount extends IAction { }
 class DeployContract extends IAction { code!: Uint8Array; }
-class FunctionCall extends IAction { methodName!: string; args!: Uint8Array; gas!: bigint; deposit!: bigint; }
-class Transfer extends IAction { deposit!: bigint; }
-class Pledge extends IAction { pledge!: bigint; publicKey!: CurveAndArrayKey; }
+class FunctionCall extends IAction { methodName!: string; args!: Uint8Array; gas!: bigint | string; deposit!: bigint | string; }
+class Transfer extends IAction { deposit!: bigint | string; }
+class Pledge extends IAction { pledge!: bigint | string; publicKey!: CurveAndArrayKey; }
 class AddKey extends IAction { publicKey!: CurveAndArrayKey; accessKey!: AccessKey; }
 class DeleteKey extends IAction { publicKey!: CurveAndArrayKey; }
 class DeleteAccount extends IAction { beneficiaryId!: string; }
@@ -60,18 +60,18 @@ export function deployContract(code: Uint8Array): Action {
  * @param gas max amount of gas that method call can use
  * @param deposit amount of $UNC (in yoctoNEAR) to send together with the call
  */
-export function functionCall(methodName: string, args: Uint8Array | object, gas: bigint, deposit: bigint): Action {
+export function functionCall(methodName: string, args: Uint8Array | object, gas: bigint | string, deposit: bigint | string): Action {
     const anyArgs = args as any;
     const isUint8Array = anyArgs.byteLength !== undefined && anyArgs.byteLength === anyArgs.length;
     const serializedArgs = isUint8Array ? args : Uint8ArrayFromString(JSON.stringify(args));
     return new Action({ functionCall: new FunctionCall({ methodName, args: serializedArgs, gas, deposit }) });
 }
 
-export function transfer(deposit: bigint): Action {
+export function transfer(deposit: bigint | string): Action {
     return new Action({ transfer: new Transfer({ deposit }) });
 }
 
-export function stake(stake: bigint, publicKey: CurveAndArrayKey): Action {
+export function pledge(stake: bigint | string, publicKey: CurveAndArrayKey): Action {
     return new Action({ stake: new Pledge({ stake, publicKey }) });
 }
 
@@ -191,7 +191,7 @@ export const SCHEMA = new Map<Function, any>([
             ['deployContract', DeployContract],
             ['functionCall', FunctionCall],
             ['transfer', Transfer],
-            ['stake', Pledge],
+            ['pledge', Pledge],
             ['addKey', AddKey],
             ['deleteKey', DeleteKey],
             ['deleteAccount', DeleteAccount],
@@ -218,7 +218,7 @@ export const SCHEMA = new Map<Function, any>([
     }],
     [Pledge, {
         kind: 'struct', fields: [
-            ['stake', 'u128'],
+            ['pledge', 'u128'],
             ['publicKey', CurveAndArrayKey]
         ]
     }],
