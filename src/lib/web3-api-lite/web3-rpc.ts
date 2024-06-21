@@ -10,7 +10,7 @@ import { sha256Async } from '../crypto-lite/crypto-primitives-browser.js';
 
 import { log } from "../log.js"
 import { decodeBase64, encodeBase64, stringFromArray, stringFromUint8Array, Uint8ArrayFromString } from "../crypto-lite/encode.js";
-import { FinalExecutionOutcome, FinalExecutionStatus, ExecutionStatusBasic } from "./unc-types.js";
+import { FinalExecutionOutcome, FinalExecutionStatus, ExecutionStatusBasic } from "./web3-types.js";
 
 
 //---------------------------
@@ -62,24 +62,24 @@ export function yton(yoctos: string) {
 //-------------------------
 export type StateResult = {
     amount: string; //"27101097909936818225912322116"
-    block_hash: string; //"DoTW1Tpp3TpC9egBe1xFJbbEb6vYxbT33g9GHepiYL5a"
-    block_height: number; //20046823
-    code_hash: string; //"11111111111111111111111111111111"
     locked: string; //"0"
-    storage_paid_at: number; //0
+    code_hash: string; //"11111111111111111111111111111111"
     storage_usage: number; // 2080
+    storage_paid_at: number; //0
+    block_height: number; //20046823
+    block_hash: string; //"DoTW1Tpp3TpC9egBe1xFJbbEb6vYxbT33g9GHepiYL5a"
 }
 
 /* 
-unc.state example result
+unc account state example result
 result: {
     amount: "27101097909936818225912322116"
-    block_hash: "DoTW1Tpp3TpC9egBe1xFJbbEb6vYxbT33g9GHepiYL5a"
-    block_height: 20046823
-    code_hash: "11111111111111111111111111111111"
     locked: "0"
-    storage_paid_at: 0
+    code_hash: "11111111111111111111111111111111"
     storage_usage: 2080
+    storage_paid_at: 0
+    block_height: 20046823
+    block_hash: "DoTW1Tpp3TpC9egBe1xFJbbEb6vYxbT33g9GHepiYL5a"
     }
 */
 
@@ -244,9 +244,7 @@ export async function signTransaction2(accessKey: any, actions: TX.Action[], sig
 export function sendSignedTransaction(signedTransaction: TX.SignedTransaction): Promise<FinalExecutionOutcome> {
     const borshEncoded = signedTransaction.encode();
     const b64EncodedString = encodeBase64(borshEncoded)
-    return jsonRpc('send_tx', {
-        "signed_tx_base64": b64EncodedString,
-        "wait_until": "NONE"}) as Promise<FinalExecutionOutcome>
+    return jsonRpc('broadcast_tx_async', [b64EncodedString]) as Promise<FinalExecutionOutcome>
 };
 
 

@@ -1,17 +1,17 @@
 import * as c from "../util/conversions.js";
 import { log, logEnabled } from "../lib/log.js";
 
-import * as Network from "../lib/unc-api-lite/network.js";
+import * as Network from "../lib/web3-api-lite/network.js";
 //import * as uncAccounts from "../util/search-accounts.js";
 
-import * as unc from "../lib/unc-api-lite/unc-rpc.js";
+import * as unc from "../lib/web3-api-lite/web3-rpc.js";
 import { localStorageSet, localStorageGet } from "../data/local-storage.js";
-import * as TX from "../lib/unc-api-lite/transaction.js";
+import * as TX from "../lib/web3-api-lite/transaction.js";
 
 import {
   FunctionCall,
   DeleteAccountToBeneficiary,
-} from "../lib/unc-api-lite/batch-transaction.js";
+} from "../lib/web3-api-lite/batch-transaction.js";
 
 import {
   changePasswordAsync, clearState, createUserAsync, getAccount, getAutoUnlockSeconds, getNetworkAccountsCount,
@@ -21,7 +21,7 @@ import {
   state, stateIsEmpty, unlockSecureStateAsync, unlockSecureStateSHA
 } from "./background-state.js";
 import { Asset, assetAddHistory, assetAmount, findAsset, History, setAssetBalanceYoctos } from "../structs/account-info.js";
-import { FinalExecutionOutcome } from "../lib/unc-api-lite/unc-types.js";
+import { FinalExecutionOutcome } from "../lib/web3-api-lite/web3-types.js";
 import { askBackgroundGetNetworkInfo } from "../askBackground.js";
 
 
@@ -427,7 +427,7 @@ function reflectTransfer(msg: any) {
 
 // create a promise to resolve the action requested by the popup
 async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
-  //console.log("getPromiseMsgFromPopup",msg)
+  console.log("getPromiseMsgFromPopup",msg)
   switch (msg.code) {
     case "set-network": {
       Network.setCurrent(msg.network);

@@ -53,7 +53,7 @@ interface FinalExecutionOutcome {
     receipts_outcome: ExecutionOutcomeWithId[];
 }
 
-// From https://github.com/unc/blob/master/specs/Standards/Wallets/InjectedWallets.md
+// From https://github.com/mywallets/blob/master/specs/Standards/Wallets/InjectedWallets.md
 /************* Start extracted from web3-api-js **************/
 
 declare class FunctionCallPermission {
@@ -163,7 +163,7 @@ interface ConnectParams {
 type Unsubscribe = () => void;
 
 const DEFAULT_NETWORK = {
-    networkId: "mainnet",
+    networkId: "testnet",
     nodeUrl: "https://unc-test.jongun2038.win"
 }
 

@@ -69,7 +69,7 @@ export async function getMywalletsMetrics() {
   const elapsed = new Date().getTime() - lastFetched
   if (elapsed >= FETCH_INTERVAL_MS || (!mywalletsMetrics && elapsed >= RETRY_INTERVAL_MS)) {
     try {
-      let data = await fetch("https://validators.mywallets.com/metrics_json")
+      let data = await fetch("https://validators.narwallets.com/metrics_json")
       mywalletsMetrics = await data.json()
       lastFetched = new Date().getTime()
       // const metapool = activeNetworkInfo.liquidStakingContract;
@@ -77,7 +77,7 @@ export async function getMywalletsMetrics() {
       //   metapool,
       //   "get_contract_state",
       //   {});
-      // stNEARPrice = yton(data.st_unc_price)
+      // stUNCPrice = yton(data.st_unc_price)
     } catch (ex) {
       console.log(ex);
     }

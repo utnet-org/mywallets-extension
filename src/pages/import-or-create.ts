@@ -1,12 +1,12 @@
 import * as d from "../util/document.js"
 import { activeNetworkInfo, askBackgroundSetAccount } from "../askBackground.js";
-import { KeyPairEd25519 } from "../lib/unc-api-lite/utils/key-pair.js";
+import { KeyPairEd25519 } from "../lib/web3-api-lite/utils/key-pair.js";
 import * as bs58 from '../lib/crypto-lite/bs58.js';
 import { show as AccountPage_show, showPrivateKeyClicked } from "./account-selected.js";
 import { Account, newAccount } from "../structs/account-info.js";
 
-import { generateSeedPhraseAsync } from "../lib/unc-api-lite/utils/seed-phrase.js";
-import type { SeedPhraseResult } from "../lib/unc-api-lite/utils/seed-phrase.js";
+import { generateSeedPhraseAsync } from "../lib/web3-api-lite/utils/seed-phrase.js";
+import type { SeedPhraseResult } from "../lib/web3-api-lite/utils/seed-phrase.js";
 import { backToSelectAccount, backToMainPageClicked } from "./main.js";
 import { encodeHex } from "../lib/crypto-lite/encode.js";
 

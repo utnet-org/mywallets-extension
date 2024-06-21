@@ -13,7 +13,8 @@
   "scripts": {
     "build": "tsc -b -verbose tsconfig-sourcemap.json && rm -rf test-new-install-ln && ln -sf extension test-new-install-ln",
     "start": "git pull && npm run build && echo done. open the extension form the browser",
-    "test": "chrome chrome://extensions/"
+    "test": "chrome chrome://extensions/",
+    "pack": "./makezip.sh"
   },
   "keywords": [
     "Utility",

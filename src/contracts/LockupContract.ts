@@ -6,9 +6,9 @@ import { sha256Async } from "../lib/crypto-lite/crypto-primitives-browser.js"
 //import * as unc from "../api/unc-rpc.js";
 import * as StakingPool from "./staking-pool.js";
 //import * as TX from "../api/transaction.js";
-import { isValidAccountID, CheckValidAmount } from "../lib/unc-api-lite/utils/valid.js";
+import { isValidAccountID, CheckValidAmount } from "../lib/web3-api-lite/utils/valid.js";
 import { activeNetworkInfo, askBackground, askBackgroundApplyTxAction, askBackgroundCallMethod, askBackgroundViewMethod } from "../askBackground.js";
-import { FunctionCall } from "../lib/unc-api-lite/batch-transaction.js";
+import { FunctionCall } from "../lib/web3-api-lite/batch-transaction.js";
 
 import type { StakingPoolAccountInfoResult } from "./staking-pool.js";
 import { encodeHex, Uint8ArrayFromString } from "../lib/crypto-lite/encode.js";
