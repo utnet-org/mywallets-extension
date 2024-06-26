@@ -2,7 +2,7 @@
 
 ## Installation
 
-Install [Mywallets v1 from the Chrome Web Store](https://chrome.google.com/webstore/detail/mywallets-v1/lkpeokpdkmcdaiadpmnnpimlgmdobkdj)
+Install [Mywallets v1 from the Chrome Web Store](https://chrome.google.com/webstore/detail/mywallets-v1/poljcmobchfooceghefdokchdkfmlcbk)
 
 ## Objectives
 
