@@ -359,9 +359,7 @@ function addClicked() {
 export function getKnownNEP141Contracts(): PopupItem[] {
   if (activeNetworkInfo.name == "testnet") {
     return [
-      { text: "wUNC - meta-v2.pool.testnet", value: "meta-v2.pool.testnet" },
-      { text: "$META - token.meta.pool.testnet", value: "token.meta.pool.testnet" },
-      { text: "CHDR - token.cheddar.testnet", value: "token.cheddar.testnet" },
+      { text: "wUNC - wrapped unc fungible token", value: "d94f28ca289d1762be250476f08dc386b66484adc5426924636a701eccba7c54" },
     ]
   } else {
     return [
