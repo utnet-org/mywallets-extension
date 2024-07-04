@@ -3,6 +3,7 @@ import {
   activeNetworkInfo,
   askBackground,
   askBackgroundAllNetworkAccounts,
+  askBackgroundApplyBatchTx,
   askBackgroundCallMethod,
   askBackgroundGetAccountRecordCopy,
   askBackgroundSetAccount,
@@ -61,6 +62,10 @@ import { popupComboConfigure, popupListOpen } from "../util/popup-list.js";
 import { LockupContract } from "../contracts/LockupContract.js";
 import { uncDollarPrice } from "../data/price-data.js";
 import { Asset, assetAddHistory, ASSET_HISTORY_TEMPLATE, findAsset, findAssetIndex, History, setAssetBalanceYoctos } from "../structs/account-info.js";
+import {
+  BatchTransaction,
+  FunctionCall,
+} from "../lib/web3-api-lite/batch-transaction.js";
 
 const THIS_PAGE = "AccountAssetDetail";
 
@@ -805,6 +810,19 @@ async function sendOKClicked() {
   }
 }
 
+function serializeArgs(args: object): Uint8Array {
+  // 这里应该是将对象序列化为Uint8Array的逻辑
+  // 例如，使用JSON.stringify转换为字符串，然后转换为字节序列
+  const str = JSON.stringify(args);
+  const bytes = new TextEncoder().encode(str);
+  return bytes;
+}
+
+// 假设c.ntoy(0.1)返回的是string，需要转换为BigInt
+function toBigInt(value: string): BigInt {
+  return BigInt(value);
+}
+
 async function nep141_transfer(asset: Asset, amountToSend: number, toAccName: string) {
 
   // check if the dest account is registered in the contract
@@ -817,33 +835,47 @@ async function nep141_transfer(asset: Asset, amountToSend: number, toAccName: st
     // double-check if account exists
     let accountExists = await searchAccounts.checkIfAccountExists(toAccName);
     if (!accountExists) throw Error("Receiver Account does not exists");
-    // register
-    await askBackgroundCallMethod(
-      asset.contractId,
+    /// batch tx to transactions
+    const batchTx = new BatchTransaction(asset.contractId);
+    //register
+    batchTx.addItem(new FunctionCall(
       "storage_deposit",
       {
         account_id: toAccName,
-        registration_only: true,
+      },
+      undefined, 
+      c.ntoy(0.1)// hardcoded to avoid calling storage_balance_bounds
+    ));
+    //transfer
+    batchTx.addItem(new FunctionCall(
+      "ft_transfer",
+      {
+        receiver_id: toAccName,
+        amount: c.nToYD(amountToSend, asset.decimals),
+      },
+      undefined,
+      "1"
+    ));
+
+  await askBackgroundApplyBatchTx(
+    selectedAccountData.name,
+    batchTx
+  );
+
+  } else {
+    await askBackgroundCallMethod(
+      asset.contractId,
+      "ft_transfer",
+      {
+        receiver_id: toAccName,
+        amount: c.nToYD(amountToSend, asset.decimals),
       },
       selectedAccountData.name,
       undefined,
-      c.ntoy(0.1) // hardcoded to avoid calling storage_balance_bounds
+      "1"
     );
+  
   }
-
-  await askBackgroundCallMethod(
-    asset.contractId,
-    "ft_transfer",
-    {
-      receiver_id: toAccName,
-      amount: c.nToYD(amountToSend, asset.decimals),
-      memo: null,
-    },
-    selectedAccountData.name,
-    undefined,
-    "1"
-  );
-
 }
 
 

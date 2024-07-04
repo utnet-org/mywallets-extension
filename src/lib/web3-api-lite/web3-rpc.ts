@@ -316,6 +316,8 @@ export async function sendTransactionAndParseResult(actions: TX.Action[], signer
         final_execution_status: 'NONE'
     };
 
+    console.log(`txh: ${bs58.encode(txHash)}`)
+
     return ret;
 
     //parseFinalExecutionOutcome(executionOutcome);

@@ -40,6 +40,8 @@ export function updateTokenAssetFromMetadata(item: Asset, metaData: any) {
     } else {
         item.icon = TOKEN_DEFAULT_SVG;
     }
+    //FIXME: repleace with a default icon
+    item.icon = TOKEN_DEFAULT_SVG;
     item.url = metaData.reference;
     item.spec = metaData.spec;
 }

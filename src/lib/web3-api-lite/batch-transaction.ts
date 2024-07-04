@@ -14,7 +14,7 @@ export class BatchTransaction {
         public receiver:string,
     ){}
 
-    addItem(item:BatchAction){
+    addItem(p0: globalThis.FunctionCall, item: BatchAction){
         this.items.push(item)
     }
 }

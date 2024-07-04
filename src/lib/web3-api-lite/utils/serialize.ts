@@ -192,7 +192,7 @@ export class BinaryReader {
 function serializeField(schema: Schema, fieldName: string, value: any, fieldType: any, writer: any) {
     try {
         // TODO: Handle missing values properly (make sure they never result in just skipped write)
-        if (typeof fieldType === 'string' || fieldType === 'u64' || fieldType === 'u128') {
+        if (typeof fieldType === 'string') {
             writer[`write_${fieldType}`](value);
         } else if (fieldType instanceof Array) {
             if (typeof fieldType[0] === 'number') {
@@ -265,7 +265,7 @@ export function serialize(schema: Schema, obj: any): Uint8Array {
 
 function deserializeField(schema: Schema, fieldName: string, fieldType: any, reader: BinaryReader): any {
     try {
-        if (typeof fieldType === 'string' || fieldType === 'u64' || fieldType === 'u128') {
+        if (typeof fieldType === 'string') {
             //@ts-ignore
             return reader[`read_${fieldType}`]();
         }
