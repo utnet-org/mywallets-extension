@@ -113,7 +113,7 @@ export function viewRaw(contractId: string, method: string, params?: any): Promi
     let encodedParams = undefined;
     if (params) {
         const asArr = Uint8ArrayFromString(JSON.stringify(params))
-        encodedParams = bs58.encode(asArr);
+        encodedParams = encodeBase64(asArr);
     }
     return jsonRpcQuery({
             "request_type": "call_function",
