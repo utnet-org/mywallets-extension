@@ -121,7 +121,7 @@ export function viewRaw(contractId: string, method: string, params?: any): Promi
             "account_id": contractId,
             "method_name": method,
             "args_base64": encodedParams
-      });
+      }) as Promise<any>;
 }
 export async function view(contractId: string, method: string, params?: any): Promise<any> {
     const data = await viewRaw(contractId, method, params);
@@ -244,6 +244,7 @@ export async function signTransaction2(accessKey: any, actions: TX.Action[], sig
 export function sendSignedTransaction(signedTransaction: TX.SignedTransaction): Promise<FinalExecutionOutcome> {
     const borshEncoded = signedTransaction.encode();
     const b64EncodedString = encodeBase64(borshEncoded)
+    console.log("signed_tx_base64: ", b64EncodedString)
     return jsonRpc('send_tx', {
         "signed_tx_base64": b64EncodedString,
         "wait_until": "NONE"}) as Promise<FinalExecutionOutcome>

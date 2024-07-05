@@ -810,20 +810,7 @@ async function sendOKClicked() {
   }
 }
 
-function serializeArgs(args: object): Uint8Array {
-  // 这里应该是将对象序列化为Uint8Array的逻辑
-  // 例如，使用JSON.stringify转换为字符串，然后转换为字节序列
-  const str = JSON.stringify(args);
-  const bytes = new TextEncoder().encode(str);
-  return bytes;
-}
-
-// 假设c.ntoy(0.1)返回的是string，需要转换为BigInt
-function toBigInt(value: string): BigInt {
-  return BigInt(value);
-}
-
-async function nep141_transfer(asset: Asset, amountToSend: number, toAccName: string) {
+async function uip20_transfer(asset: Asset, amountToSend: number, toAccName: string) {
 
   // check if the dest account is registered in the contract
   let regBalance = await askBackgroundViewMethod(
@@ -843,7 +830,7 @@ async function nep141_transfer(asset: Asset, amountToSend: number, toAccName: st
       {
         account_id: toAccName,
       },
-      undefined, 
+      c.TGas(150), 
       c.ntoy(0.1)// hardcoded to avoid calling storage_balance_bounds
     ));
     //transfer
@@ -853,7 +840,7 @@ async function nep141_transfer(asset: Asset, amountToSend: number, toAccName: st
         receiver_id: toAccName,
         amount: c.nToYD(amountToSend, asset.decimals),
       },
-      undefined,
+      c.TGas(150),
       "1"
     ));
 
@@ -890,7 +877,7 @@ async function performSend() {
     disableOKCancel();
     d.showWait();
 
-    await nep141_transfer(asset_selected, amountToSend, toAccName)
+    await uip20_transfer(asset_selected, amountToSend, toAccName)
     // Note: The popup window & process can be terminated by chrome while waiting,
     // if the user clicks elsewhere in the page.
     // You can not rely on the code below being executed
