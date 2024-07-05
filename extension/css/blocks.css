@@ -6,6 +6,7 @@
   width: 480px;
   height: 550px;
   background: var(--Background);
+  /*background: #f3efe8;*/
   /* background:var(--midcolor); */
   overflow: hidden;
   text-align: center;

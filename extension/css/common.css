@@ -4,7 +4,7 @@
 h2 {
   color      : var(--TextRemark);
   font-size  : 28px;
-  font-weight: 200;
+  font-weight: 400;
   display    : block;
   width      : 400px;
   height     : auto;
@@ -15,7 +15,8 @@ h2 {
 }
 
 h3 {
-  color      : var(--TextGeneric);
+  /*color      : var(--TextGeneric);*/
+  color      : #3EDFCF;
   font-size: 17px;
   font-weight: 200;
   display    : block;

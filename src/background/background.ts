@@ -1,37 +1,44 @@
 import * as c from "../util/conversions.js";
-import { log, logEnabled } from "../lib/log.js";
+import {debug, log, logEnabled} from "../lib/log.js";
 
 import * as Network from "../lib/web3-api-lite/network.js";
 //import * as uncAccounts from "../util/search-accounts.js";
 
 import * as unc from "../lib/web3-api-lite/web3-rpc.js";
-import { localStorageSet, localStorageGet } from "../data/local-storage.js";
+import {localStorageSet, localStorageGet} from "../data/local-storage.js";
 import * as TX from "../lib/web3-api-lite/transaction.js";
 
 import {
-  FunctionCall,
-  DeleteAccountToBeneficiary,
+    FunctionCall,
+    DeleteAccountToBeneficiary,
 } from "../lib/web3-api-lite/batch-transaction.js";
 
 import {
-  changePasswordAsync, clearState, createUserAsync, getAccount, getAutoUnlockSeconds, getNetworkAccountsCount,
-  getUnlockSHA,
-  isLocked, lockWallet, recoverState, saveSecureState, secureState,
-  secureStateOpened,
-  state, stateIsEmpty, unlockSecureStateAsync, unlockSecureStateSHA
+    changePasswordAsync, clearState, createUserAsync, getAccount, getAutoUnlockSeconds, getNetworkAccountsCount,
+    getUnlockSHA,
+    isLocked, lockWallet, recoverState, saveSecureState, secureState,
+    secureStateOpened,
+    state, stateIsEmpty, unlockSecureStateAsync, unlockSecureStateSHA
 } from "./background-state.js";
-import { Asset, assetAddHistory, assetAmount, findAsset, History, setAssetBalanceYoctos } from "../structs/account-info.js";
-import { FinalExecutionOutcome } from "../lib/web3-api-lite/web3-types.js";
-import { askBackgroundGetNetworkInfo } from "../askBackground.js";
-
+import {
+    Asset,
+    assetAddHistory,
+    assetAmount,
+    findAsset,
+    History,
+    setAssetBalanceYoctos
+} from "../structs/account-info.js";
+import {FinalExecutionOutcome} from "../lib/web3-api-lite/web3-types.js";
+import {askBackgroundGetNetworkInfo} from "../askBackground.js";
 
 
 //export let globalSendResponse: Function | undefined = undefined
 
 //version: major+minor+version, 3 digits each
 function semver(major: number, minor: number, version: number): number {
-  return major * 1e6 + minor * 1e3 + version;
+    return major * 1e6 + minor * 1e3 + version;
 }
+
 const WALLET_VERSION = semver(2, 0, 0);
 
 //----------------------------------------
@@ -44,608 +51,636 @@ const WALLET_VERSION = semver(2, 0, 0);
 chrome.runtime.onMessage.addListener(runtimeMessageHandler);
 
 function runtimeMessageHandler(
-  msg: any,
-  sender: chrome.runtime.MessageSender,
-  sendResponse: SendResponseFunction
+    msg: any,
+    sender: chrome.runtime.MessageSender,
+    sendResponse: SendResponseFunction
 ) {
 
-  //-- DEBUG
-  //logEnabled(1)
-  //console.log("runtimeMessage received ", sender, msg)
-  const senderIsExt = sender.url && sender.url.startsWith("chrome-extension://" + chrome.runtime.id + "/");
-  //console.log("BKG: msg, senderIsExt", senderIsExt, msg);
-  // const jsonMsg = JSON.stringify(msg)
-  // log(
-  //   "BKG: msg senderIsExt:" + senderIsExt + " " +
-  //   jsonMsg?.substring(0, Math.min(120, jsonMsg.length))
-  // );
-  //-- END DEBUG
+    //-- DEBUG
+    //logEnabled(1)
+    //console.log("runtimeMessage received ", sender, msg)
+    const senderIsExt = sender.url && sender.url.startsWith("chrome-extension://" + chrome.runtime.id + "/");
+    //console.log("BKG: msg, senderIsExt", senderIsExt, msg);
+    // const jsonMsg = JSON.stringify(msg)
+    // log(
+    //   "BKG: msg senderIsExt:" + senderIsExt + " " +
+    //   jsonMsg?.substring(0, Math.min(120, jsonMsg.length))
+    // );
+    //-- END DEBUG
 
-  // information messages to set global flags and finish waiting
-  if (msg && msg.code === "popup-is-ready") {
-    globalFlagPopupIsReadyMsgReceived = true
-    return false // done, internal message no callback required
-  }
-  if (!msg || msg.dest != "ext") {
-    log("bkg handler, not for me!")
-    return false;
-  }
+    // information messages to set global flags and finish waiting
+    if (msg && msg.code === "popup-is-ready") {
+        globalFlagPopupIsReadyMsgReceived = true
+        return false // done, internal message no callback required
+    }
+    if (!msg || msg.dest != "ext") {
+        log("bkg handler, not for me!")
+        return false;
+    }
 
-  // launch recover data
-  tryRetrieveBgInfoFromStorage().
-    then(() => { // launch async processing
-      runtimeMessageHandlerAfterTryRetrieveData(msg, sender, sendResponse)
+    // launch recover data
+    tryRetrieveBgInfoFromStorage().then(() => { // launch async processing
+        runtimeMessageHandlerAfterTryRetrieveData(msg, sender, sendResponse)
     });
 
-  return true; // will be resolved later on retrieveBgInfoFromStorage.then()
+    return true; // will be resolved later on retrieveBgInfoFromStorage.then()
 }
 
 // after recovering the background data
 // process the message, use sendResponse({err:, data:}) to respond
 async function runtimeMessageHandlerAfterTryRetrieveData(
-  msg: any,
-  sender: chrome.runtime.MessageSender,
-  sendResponse: SendResponseFunction
+    msg: any,
+    sender: chrome.runtime.MessageSender,
+    sendResponse: SendResponseFunction
 ) {
-  // check if it comes from the web-page or from this extension
-  // TODO: CHECK: can still a malicious page make a postMessage and get here as "fromExtension"
-  // can the malicious page do it if the wallet is locked (will trigger unlock and send message from the unlock popup)
-  const senderIsExt = sender.url && sender.url.startsWith("chrome-extension://" + chrome.runtime.id + "/");
-  //console.log("BK w/data sender is ext", senderIsExt, msg)
-  if (!senderIsExt || msg.src === "page") {
-    // from web-app/tab or wallet-selector -> content-script -> here
-    // process separated from internal requests for security. 
-    // We don't trust the page, 
-    // Actions require user approval
-    resolveUntrustedFromPage(sender, msg, sendResponse)
-  }
-  else {
-    // from internal trusted sources like extension-popup
-    // use promises to resolve
-    getPromiseMsgFromPopup(msg)
-      .then((data: any) => {
-        //promise resolved OK
-        console.log("promise resolved, data", data)
-        reflectTransfer(msg); // add history entries, move amounts if accounts are in the wallet
-        sendResponse({ data: data });
-      })
-      .catch((ex: Error) => {
-        console.log("sendResponse, err", ex.message)
-        sendResponse({ err: ex.message });
-      });
-  }
+    // check if it comes from the web-page or from this extension
+    // TODO: CHECK: can still a malicious page make a postMessage and get here as "fromExtension"
+    // can the malicious page do it if the wallet is locked (will trigger unlock and send message from the unlock popup)
+    const senderIsExt = sender.url && sender.url.startsWith("chrome-extension://" + chrome.runtime.id + "/");
+    //console.log("BK w/data sender is ext", senderIsExt, msg)
+    if (!senderIsExt || msg.src === "page") {
+        // from web-app/tab or wallet-selector -> content-script -> here
+        // process separated from internal requests for security.
+        // We don't trust the page,
+        // Actions require user approval
+        resolveUntrustedFromPage(sender, msg, sendResponse)
+    } else {
+        // from internal trusted sources like extension-popup
+        // use promises to resolve
+        getPromiseMsgFromPopup(msg)
+            .then((data: any) => {
+                //promise resolved OK
+                console.log("promise resolved, data", data)
+                reflectTransfer(msg); // add history entries, move amounts if accounts are in the wallet
+                sendResponse({data: data});
+            })
+            .catch((ex: Error) => {
+                console.log("sendResponse, err", ex.message)
+                sendResponse({err: ex.message});
+            });
+    }
 }
 
 type SendResponseFunction = (response: any) => void;
 
 export const WALLET_SELECTOR_CODES = {
-  CONNECT: "connect",
-  IS_INSTALLED: "is-installed",
-  IS_SIGNED_IN: "is-signed-in",
-  SIGN_OUT: "sign-out",
-  SIGN_IN: "sign-in",
-  GET_ACCOUNT_ID: "get-account-id",
-  //APPLY: "apply",
-  SIGN_AND_SEND_TRANSACTION: "sign-and-send-transaction",
-  SIGN_AND_SEND_TRANSACTIONS: "sign-and-send-transactions",
-  GET_NETWORK: "get-network",
-  DISCONNECT: "disconnect",
+    CONNECT: "connect",
+    IS_INSTALLED: "is-installed",
+    IS_SIGNED_IN: "is-signed-in",
+    SIGN_OUT: "sign-out",
+    SIGN_IN: "sign-in",
+    GET_ACCOUNT_ID: "get-account-id",
+    //APPLY: "apply",
+    SIGN_AND_SEND_TRANSACTION: "sign-and-send-transaction",
+    SIGN_AND_SEND_TRANSACTIONS: "sign-and-send-transactions",
+    GET_NETWORK: "get-network",
+    DISCONNECT: "disconnect",
 }
 
+let popupWindowId: number | undefined | null = null;
+
 async function handleUnlock(msg: Record<string, any>, sendResponse: SendResponseFunction) {
-  globalFlagPopupIsReadyMsgReceived = false
-  const width = 500;
-  const height = 600;
-  chrome.windows.create({
-    url: "index.html",
-    type: "popup",
-    //left: 40,
-    top: 100,
-    width: width,
-    height: height,
-    focused: true,
-  })
-  waitForPopupToOpen("unlock-popup", msg, sendResponse)
+    globalFlagPopupIsReadyMsgReceived = false
+    const width = 500;
+    const height = 600;
+    if (popupWindowId) {
+        await chrome.windows.update(popupWindowId, {focused: true});
+        return;
+    }
+    // Get current window
+    chrome.windows.getCurrent((currentWindow) => {
+        chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+            const top = currentWindow.top;
+            const left = currentWindow.left! + currentWindow.width! - width; // Fix extension position
+            chrome.windows.create({
+                url: "index.html",
+                type: "popup",
+                left: left,
+                top: top,
+                width: width,
+                height: height,
+                focused: true,
+            }, (newWindow) => {
+
+                popupWindowId = newWindow!.id; // save window ID
+                // 添加事件监听器，当窗口关闭时重置 popupWindowId
+                chrome.windows.onRemoved.addListener((windowId) => {
+                    if (windowId === popupWindowId) {
+                        popupWindowId = null;
+                    }
+                });
+            });
+        });
+    });
+    // chrome.windows.create({
+    //   url: "index.html",
+    //   type: "popup",
+    //   //left: 40,
+    //   top: 100,
+    //   width: width,
+    //   height: height,
+    //   focused: true,
+    // })
+    waitForPopupToOpen("unlock-popup", msg, sendResponse)
 }
 
 /// this function should call sendResponse now, or else return true and call sendResponse later
 function resolveUntrustedFromPage(
-  sender: chrome.runtime.MessageSender,
-  msg: Record<string, any>,
-  sendResponse: SendResponseFunction) {
+    sender: chrome.runtime.MessageSender,
+    msg: Record<string, any>,
+    sendResponse: SendResponseFunction) {
 
-  // If the message comes from the extension, we trust the value from msg.senderUrl
-  const senderIsExt = sender.url && sender.url.startsWith("chrome-extension://" + chrome.runtime.id + "/");
-  if (sender.url && !senderIsExt) msg.senderUrl = sender.url.split(/[?#]/)[0]; // remove querystring and/or hash
+    // If the message comes from the extension, we trust the value from msg.senderUrl
+    const senderIsExt = sender.url && sender.url.startsWith("chrome-extension://" + chrome.runtime.id + "/");
+    if (sender.url && !senderIsExt) msg.senderUrl = sender.url.split(/[?#]/)[0]; // remove querystring and/or hash
 
-  switch (msg.code) {
+    switch (msg.code) {
 
-    case WALLET_SELECTOR_CODES.CONNECT:
-      if (isLocked()) {
-        handleUnlock(msg, sendResponse)
-      } else {
-        // not locked
-        localStorageGet("currentAccountId").then(accName => {
-          const accInfo = getAccount(accName);
-          sendResponse({ data: accInfo, code: msg.code })
-        })
-      }
-      break
-    case WALLET_SELECTOR_CODES.IS_INSTALLED:
-      sendResponse({ data: true, code: msg.code })
-      return;
-
-    case WALLET_SELECTOR_CODES.IS_SIGNED_IN:
-      sendResponse({ data: !isLocked(), code: msg.code })
-      return;
-
-    case WALLET_SELECTOR_CODES.DISCONNECT:
-    case WALLET_SELECTOR_CODES.SIGN_OUT:
-      // await disconnectFromWebPage()
-      lockWallet("sign-out")
-      sendResponse({ data: true, code: msg.code })
-      // ctinfo.acceptedConnection = false;
-      return;
-
-    case WALLET_SELECTOR_CODES.SIGN_IN:
-    case WALLET_SELECTOR_CODES.GET_ACCOUNT_ID:
-      if (isLocked()) {
-        handleUnlock(msg, sendResponse)
-      } else {
-        // not locked
-        localStorageGet("currentAccountId").then(accName => {
-          sendResponse({ data: accName, code: msg.code })
-        })
-      }
-
-      break
-
-    case WALLET_SELECTOR_CODES.SIGN_AND_SEND_TRANSACTION:
-      if (isLocked()) {
-        handleUnlock(msg, sendResponse)
-      } else {
-        // The standard sends the transaction information inside a transaction object, but it wasn't previously done like this.
-        // Consider changing the way mywallets builds this object.
-        if (msg.params.transaction) {
-          msg.params = msg.params.transaction
-          msg.params.actions = msg.params.actions.map((action: any) => {
-            return {
-              params: action
+        case WALLET_SELECTOR_CODES.CONNECT:
+            if (isLocked()) {
+                handleUnlock(msg, sendResponse)
+            } else {
+                // not locked
+                localStorageGet("currentAccountId").then(accName => {
+                    const accInfo = getAccount(accName);
+                    sendResponse({data: accInfo, code: msg.code})
+                })
             }
-          })
-        }
-        prepareAndOpenApprovePopup(msg, sendResponse)
-        return true; // the approve popup will call sendResponse later
-      }
-      break
-    case WALLET_SELECTOR_CODES.SIGN_AND_SEND_TRANSACTIONS:
-      if (isLocked()) {
-        handleUnlock(msg, sendResponse)
-      } else {
-        // The standard sends the transaction information inside a transaction object, but it wasn't previously done like this.
-        // Consider changing the way mywallets builds this object.
-        if (msg.params.length > 0 && msg.params[0].transaction) {
-          msg.params = msg.params.map((p: any) => {
-            p = p.transaction
-            p.actions = p.actions.map((action: any) => {
-              return {
-                params: action
-              }
-            })
-            return p
-          })
-        }
-        prepareAndOpenApprovePopup(msg, sendResponse)
-        return true; // the approve popup will call sendResponse later
-      }
-      break
-    case WALLET_SELECTOR_CODES.GET_NETWORK:
-      const networkInfo: Network.NetworkInfo = Network.currentInfo()
-      sendResponse({ code: msg.code, data: { networkId: networkInfo.name, nodeUrl: networkInfo.rpc } })
-      break
+            break
+        case WALLET_SELECTOR_CODES.IS_INSTALLED:
+            sendResponse({data: true, code: msg.code})
+            return;
 
-    default:
-      console.log("Error")
-      sendResponse({ err: "invalid code " + msg.code })
-  }
+        case WALLET_SELECTOR_CODES.IS_SIGNED_IN:
+            sendResponse({data: !isLocked(), code: msg.code})
+            return;
+
+        case WALLET_SELECTOR_CODES.DISCONNECT:
+        case WALLET_SELECTOR_CODES.SIGN_OUT:
+            // await disconnectFromWebPage()
+            lockWallet("sign-out")
+            sendResponse({data: true, code: msg.code})
+            // ctinfo.acceptedConnection = false;
+            return;
+
+        case WALLET_SELECTOR_CODES.SIGN_IN:
+        case WALLET_SELECTOR_CODES.GET_ACCOUNT_ID:
+            if (isLocked()) {
+                handleUnlock(msg, sendResponse)
+            } else {
+                // not locked
+                localStorageGet("currentAccountId").then(accName => {
+                    sendResponse({data: accName, code: msg.code})
+                })
+            }
+
+            break
+
+        case WALLET_SELECTOR_CODES.SIGN_AND_SEND_TRANSACTION:
+            if (isLocked()) {
+                handleUnlock(msg, sendResponse)
+            } else {
+                // The standard sends the transaction information inside a transaction object, but it wasn't previously done like this.
+                // Consider changing the way mywallets builds this object.
+                if (msg.params.transaction) {
+                    msg.params = msg.params.transaction
+                    msg.params.actions = msg.params.actions.map((action: any) => {
+                        return {
+                            params: action
+                        }
+                    })
+                }
+                prepareAndOpenApprovePopup(msg, sendResponse)
+                return true; // the approve popup will call sendResponse later
+            }
+            break
+        case WALLET_SELECTOR_CODES.SIGN_AND_SEND_TRANSACTIONS:
+            if (isLocked()) {
+                handleUnlock(msg, sendResponse)
+            } else {
+                // The standard sends the transaction information inside a transaction object, but it wasn't previously done like this.
+                // Consider changing the way mywallets builds this object.
+                if (msg.params.length > 0 && msg.params[0].transaction) {
+                    msg.params = msg.params.map((p: any) => {
+                        p = p.transaction
+                        p.actions = p.actions.map((action: any) => {
+                            return {
+                                params: action
+                            }
+                        })
+                        return p
+                    })
+                }
+                prepareAndOpenApprovePopup(msg, sendResponse)
+                return true; // the approve popup will call sendResponse later
+            }
+            break
+        case WALLET_SELECTOR_CODES.GET_NETWORK:
+            const networkInfo: Network.NetworkInfo = Network.currentInfo()
+            sendResponse({code: msg.code, data: {networkId: networkInfo.name, nodeUrl: networkInfo.rpc}})
+            break
+
+        default:
+            console.log("Error")
+            sendResponse({err: "invalid code " + msg.code})
+    }
 }
 
 function prepareAndOpenApprovePopup(msg: Record<string, any>, sendResponse: SendResponseFunction) {
 
-  globalFlagPopupIsReadyMsgReceived = false
-  //load popup window for the user to approve
-  const width = 500;
-  const height = 540;
-  chrome.windows.create({
-    url: "popups/approve/approve.html",
-    type: "popup",
-    //left: 40,
-    top: 100,
-    width: width,
-    height: height,
-    focused: true,
-  });
+    globalFlagPopupIsReadyMsgReceived = false
+    //load popup window for the user to approve
+    const width = 500;
+    const height = 540;
+    chrome.windows.create({
+        url: "popups/approve/approve.html",
+        type: "popup",
+        //left: 40,
+        top: 100,
+        width: width,
+        height: height,
+        focused: true,
+    });
 
-  waitForPopupToOpen("approve-popup", msg, sendResponse)
+    waitForPopupToOpen("approve-popup", msg, sendResponse)
 }
 
 async function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 let globalFlagPopupIsReadyMsgReceived: boolean;
 
 async function waitForPopupToOpen(
-  dest: string,
-  msg: Record<string, any>,
-  sendResponse: SendResponseFunction) {
-  msg.dest = dest
-  while (!globalFlagPopupIsReadyMsgReceived) {
-    await sleep(100)
-  }
-  chrome.runtime.sendMessage(msg, sendResponse)
-  // await sleep(1000)
+    dest: string,
+    msg: Record<string, any>,
+    sendResponse: SendResponseFunction) {
+    msg.dest = dest
+    while (!globalFlagPopupIsReadyMsgReceived) {
+        await sleep(100)
+    }
+    chrome.runtime.sendMessage(msg, sendResponse)
+    // await sleep(1000)
 }
 
 async function commitActions(accessKey: any, params: any, privateKey: string): Promise<FinalExecutionOutcome> {
-  // re-hydrate action POJO as class instances, for the borsh serializer
-  const rehydratedActions = params.actions.map((action: any) => createCorrespondingAction(action))
-  //console.log("calling unc.sendTransaction2",rehydratedActions)
-  return unc.sendTransaction2(
-    accessKey,
-    rehydratedActions,
-    params.signerId,
-    params.receiverId,
-    privateKey
-  )
+    // re-hydrate action POJO as class instances, for the borsh serializer
+    const rehydratedActions = params.actions.map((action: any) => createCorrespondingAction(action))
+    //console.log("calling unc.sendTransaction2",rehydratedActions)
+    return unc.sendTransaction2(
+        accessKey,
+        rehydratedActions,
+        params.signerId,
+        params.receiverId,
+        privateKey
+    )
 }
 
 // re-hydrate action POJO as class instance
 function createCorrespondingAction(action: any): TX.Action {
-  switch (action.type) {
-    case "FunctionCall":
-      return TX.functionCall(action.params.methodName, action.params.args, BigInt(action.params.gas), BigInt(action.params.deposit))
-    case "Transfer":
-      return TX.transfer(BigInt(action.attached))
-    case "DeleteAccount":
-      return TX.deleteAccount(action.beneficiaryAccountId)
-    default:
-      throw new Error(`action.type not contemplated: ${action.type}`)
-  }
+    switch (action.type) {
+        case "FunctionCall":
+            return TX.functionCall(action.params.methodName, action.params.args, BigInt(action.params.gas), BigInt(action.params.deposit))
+        case "Transfer":
+            return TX.transfer(BigInt(action.attached))
+        case "DeleteAccount":
+            return TX.deleteAccount(action.beneficiaryAccountId)
+        default:
+            throw new Error(`action.type not contemplated: ${action.type}`)
+    }
 }
 
 function reflectReception(receiver: string, amount: number, sender: string) {
-  const accounts = secureState.accounts[Network.current];
-  // is the dest-account also in this wallet?
-  const destAccount = accounts[receiver];
-  if (destAccount == undefined) return;
-  destAccount.lastBalance += amount
-  destAccount.history.unshift(new History("received", amount, sender))
+    const accounts = secureState.accounts[Network.current];
+    // is the dest-account also in this wallet?
+    const destAccount = accounts[receiver];
+    if (destAccount == undefined) return;
+    destAccount.lastBalance += amount
+    destAccount.history.unshift(new History("received", amount, sender))
 }
 
 //-- reflect transfer in wallet accounts
 // no async
 function reflectTransfer(msg: any) {
-  let modified = false;
-  try {
-    switch (msg.code) {
-      case "apply": {
-        // apply transaction request from popup
-        // {code:"apply", signerId:<account>, tx:BatchTransaction}
-        // when resolved, send msg to content-script->page
-        const accounts = secureState.accounts[Network.current];
-        if (accounts == undefined) return;
-        const signerId = msg.signerId || "...";
-        for (let item of msg.tx.items) {
-          //convert action
-          switch (item.action) {
-            case "call":
-              const f = item as FunctionCall;
-              if (f.method == "ft_transfer" || f.method == "ft_transfer_call") {
-                const contract = msg.tx.receiver;
-                const sender = signerId;
-                const receiver = f.args.receiver_id
-                const amountY = f.args.amount;
+    let modified = false;
+    try {
+        switch (msg.code) {
+            case "apply": {
+                // apply transaction request from popup
+                // {code:"apply", signerId:<account>, tx:BatchTransaction}
+                // when resolved, send msg to content-script->page
+                const accounts = secureState.accounts[Network.current];
+                if (accounts == undefined) return;
+                const signerId = msg.signerId || "...";
+                for (let item of msg.tx.items) {
+                    //convert action
+                    switch (item.action) {
+                        case "call":
+                            const f = item as FunctionCall;
+                            if (f.method == "ft_transfer" || f.method == "ft_transfer_call") {
+                                const contract = msg.tx.receiver;
+                                const sender = signerId;
+                                const receiver = f.args.receiver_id
+                                const amountY = f.args.amount;
 
-                const sourceAccount = accounts[sender];
-                if (sourceAccount == undefined) break;
-                // search the asset in the source-account
-                const sourceAsset = findAsset(sourceAccount, contract)
-                if (sourceAsset && sourceAsset.balance != undefined) {
-                  // if found, subtract amount from balance
-                  sourceAsset.balance -= assetAmount(sourceAsset, amountY);
-                  if (sourceAsset.balance < 0) sourceAsset.balance = 0;
-                  assetAddHistory(sourceAsset, "send", assetAmount(sourceAsset, amountY), receiver)
+                                const sourceAccount = accounts[sender];
+                                if (sourceAccount == undefined) break;
+                                // search the asset in the source-account
+                                const sourceAsset = findAsset(sourceAccount, contract)
+                                if (sourceAsset && sourceAsset.balance != undefined) {
+                                    // if found, subtract amount from balance
+                                    sourceAsset.balance -= assetAmount(sourceAsset, amountY);
+                                    if (sourceAsset.balance < 0) sourceAsset.balance = 0;
+                                    assetAddHistory(sourceAsset, "send", assetAmount(sourceAsset, amountY), receiver)
+                                }
+
+                                // is the dest-account also in this wallet?
+                                const destAccount = accounts[receiver];
+                                if (destAccount == undefined) break;
+                                // search the asset in the dest-account
+                                let destAsset = findAsset(destAccount, contract);
+                                if (destAsset != undefined && destAsset.balance != undefined) {
+                                    // if found, add amount to balance
+                                    destAsset.balance += assetAmount(destAsset, amountY);
+                                    //assetAddHistory(destAsset)
+                                } else if (sourceAsset != undefined) {
+                                    // if not found, clone from sourceAsset
+                                    destAsset = Asset.newFrom(sourceAsset)
+                                    setAssetBalanceYoctos(destAsset, amountY);
+                                    destAccount.assets.push(destAsset)
+                                }
+                                if (destAsset != undefined) {
+                                    assetAddHistory(destAsset, "received", assetAmount(destAsset, amountY), sender)
+                                }
+                                modified = true;
+                            }
+                            break;
+
+                        case "transfer": { // Utility native
+                            const sender = signerId;
+                            const receiver = msg.tx.receiver;
+                            const amountY = item.attached;
+
+                            const sourceAccount = accounts[sender];
+                            if (sourceAccount == undefined) break;
+                            sourceAccount.lastBalance -= c.yton(amountY)
+                            modified = true;
+                            if (sourceAccount.lastBalance < 0) sourceAccount.lastBalance = 0;
+                            sourceAccount.history.unshift(new History("send", c.yton(amountY), receiver))
+
+                            reflectReception(receiver, c.yton(amountY), sender);
+                        }
+                            break;
+
+                        // commented: amount can not be determined precisely
+                        // case "delete": {
+                        //   const d = item as DeleteAccountToBeneficiary;
+                        //   const sender = signerId;
+                        //   const sourceAccount = accounts[sender];
+                        //   if (sourceAccount == undefined) break;
+                        //   reflectReception(d.beneficiaryAccountId,c.yton(amountY),signerId);
+                        //   actions.push(TX.deleteAccount());
+                        // }
+                        // break;
+
+                        default:
+                        // other item.action
+                    }
                 }
-
-                // is the dest-account also in this wallet?
-                const destAccount = accounts[receiver];
-                if (destAccount == undefined) break;
-                // search the asset in the dest-account
-                let destAsset = findAsset(destAccount, contract);
-                if (destAsset != undefined && destAsset.balance != undefined) {
-                  // if found, add amount to balance
-                  destAsset.balance += assetAmount(destAsset, amountY);
-                  //assetAddHistory(destAsset)
-                }
-                else if (sourceAsset != undefined) {
-                  // if not found, clone from sourceAsset
-                  destAsset = Asset.newFrom(sourceAsset)
-                  setAssetBalanceYoctos(destAsset, amountY);
-                  destAccount.assets.push(destAsset)
-                }
-                if (destAsset != undefined) {
-                  assetAddHistory(destAsset, "received", assetAmount(destAsset, amountY), sender)
-                }
-                modified = true;
-              }
-              break;
-
-            case "transfer": { // Utility native
-              const sender = signerId;
-              const receiver = msg.tx.receiver;
-              const amountY = item.attached;
-
-              const sourceAccount = accounts[sender];
-              if (sourceAccount == undefined) break;
-              sourceAccount.lastBalance -= c.yton(amountY)
-              modified = true;
-              if (sourceAccount.lastBalance < 0) sourceAccount.lastBalance = 0;
-              sourceAccount.history.unshift(new History("send", c.yton(amountY), receiver))
-
-              reflectReception(receiver, c.yton(amountY), sender);
             }
-              break;
-
-            // commented: amount can not be determined precisely
-            // case "delete": {
-            //   const d = item as DeleteAccountToBeneficiary;
-            //   const sender = signerId;
-            //   const sourceAccount = accounts[sender];
-            //   if (sourceAccount == undefined) break;
-            //   reflectReception(d.beneficiaryAccountId,c.yton(amountY),signerId);
-            //   actions.push(TX.deleteAccount());
-            // }
-            // break;
-
-            default:
-            // other item.action
-          }
+            default: {
+                //throw Error(`invalid msg.code ${JSON.stringify(msg)}`);
+            }
         }
-      }
-      default: {
-        //throw Error(`invalid msg.code ${JSON.stringify(msg)}`);
-      }
+        if (modified) {
+            saveSecureState();
+        }
+    } catch (ex) {
+        console.error(ex);
     }
-    if (modified) {
-      saveSecureState();
-    }
-  } catch (ex) {
-    console.error(ex);
-  }
 }
 
 // create a promise to resolve the action requested by the popup
 async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
-  console.log("getPromiseMsgFromPopup",msg)
-  switch (msg.code) {
-    case "set-network": {
-      Network.setCurrent(msg.network);
-      localStorageSet({ selectedNetwork: Network.current });
-      return Network.currentInfo()
-    }
-    case "get-network-info": {
-      return Network.currentInfo()
-    }
-    case "get-state": {
-      return state
-    }
-    case "lock": {
-      return lockWallet(JSON.stringify(msg))
-    }
-    case "is-locked": {
-      return isLocked()
-    }
-    case "unlockSecureState": {
-      return unlockSecureStateAsync(msg.email, msg.password);
-    }
-    case "create-user": {
-      return createUserAsync(msg.email, msg.password);
-    }
-    case "change-password": {
-      return changePasswordAsync(msg.email, msg.password)
-    }
-    case "set-options": {
-      secureState.advancedMode = msg.advancedMode;
-      secureState.autoUnlockSeconds = msg.autoUnlockSeconds;
-      saveSecureState();
-      return
-    }
-    case "get-options": {
-      return {
-        advancedMode: secureState.advancedMode,
-        autoUnlockSeconds: secureState.autoUnlockSeconds,
-      }
-    }
-    case "get-account": {
-      if (!secureState.accounts[Network.current]) {
-        return undefined;
-      }
-      return secureState.accounts[Network.current][msg.accountId]
-    }
-    case "set-account": {
-      if (!msg.accountId) throw Error("!msg.accountId");
-      if (!msg.accInfo) throw Error("!msg.accInfo");
-      if (!msg.accInfo.network) {
-        console.error("Account without network. ", JSON.stringify(msg.accInfo))
-      } else {
-        if (!secureState.accounts[msg.accInfo.network]) {
-          secureState.accounts[msg.accInfo.network] = {};
+    console.log("getPromiseMsgFromPopup", msg)
+    switch (msg.code) {
+        case "set-network": {
+            Network.setCurrent(msg.network);
+            localStorageSet({selectedNetwork: Network.current});
+            return Network.currentInfo()
         }
-        secureState.accounts[msg.accInfo.network][msg.accountId] = msg.accInfo;
-        saveSecureState();
-      }
-      return
-    }
-    case "add-contact": {
-      if (!msg.name) throw Error("!msg.name");
-      if (!secureState.contacts) secureState.contacts = {};
-      if (!secureState.contacts[Network.current]) {
-        secureState.contacts[Network.current] = {};
-      }
-      secureState.contacts[Network.current][msg.name] = msg.contact;
-      saveSecureState();
-      return
-    }
-    case "set-account-order": {
-      let accInfo = getAccount(msg.accountId);
-      accInfo.order = msg.order;
-      saveSecureState();
-      return
-    }
-    case "remove-account": {
-      if (msg.accountId) {
-        delete secureState.accounts[Network.current][msg.accountId];
-      }
-      //persist
-      saveSecureState();
-      return
-    }
-    case "getNetworkAccountsCount": {
-      return getNetworkAccountsCount()
-    }
-    case "all-address-contacts": {
-      if (!secureState.contacts) {
-        return {};
-      } else {
-        return secureState.contacts[Network.current];
-      }
-    }
-    case "all-network-accounts": {
-      return secureState.accounts[Network.current] || {}
-    }
-    // case "connect": {
-    //   if (!msg.network) msg.network = Network.current;
-    //   return connectToWebPage(msg.accountId, msg.network);
-    // }
+        case "get-network-info": {
+            return Network.currentInfo()
+        }
+        case "get-state": {
+            return state
+        }
+        case "lock": {
+            return lockWallet(JSON.stringify(msg))
+        }
+        case "is-locked": {
+            return isLocked()
+        }
+        case "unlockSecureState": {
+            return unlockSecureStateAsync(msg.email, msg.password);
+        }
+        case "create-user": {
+            return createUserAsync(msg.email, msg.password);
+        }
+        case "change-password": {
+            return changePasswordAsync(msg.email, msg.password)
+        }
+        case "set-options": {
+            secureState.advancedMode = msg.advancedMode;
+            secureState.autoUnlockSeconds = msg.autoUnlockSeconds;
+            saveSecureState();
+            return
+        }
+        case "get-options": {
+            return {
+                advancedMode: secureState.advancedMode,
+                autoUnlockSeconds: secureState.autoUnlockSeconds,
+            }
+        }
+        case "get-account": {
+            if (!secureState.accounts[Network.current]) {
+                return undefined;
+            }
+            return secureState.accounts[Network.current][msg.accountId]
+        }
+        case "set-account": {
+            if (!msg.accountId) throw Error("!msg.accountId");
+            if (!msg.accInfo) throw Error("!msg.accInfo");
+            if (!msg.accInfo.network) {
+                console.error("Account without network. ", JSON.stringify(msg.accInfo))
+            } else {
+                if (!secureState.accounts[msg.accInfo.network]) {
+                    secureState.accounts[msg.accInfo.network] = {};
+                }
+                secureState.accounts[msg.accInfo.network][msg.accountId] = msg.accInfo;
+                saveSecureState();
+            }
+            return
+        }
+        case "add-contact": {
+            if (!msg.name) throw Error("!msg.name");
+            if (!secureState.contacts) secureState.contacts = {};
+            if (!secureState.contacts[Network.current]) {
+                secureState.contacts[Network.current] = {};
+            }
+            secureState.contacts[Network.current][msg.name] = msg.contact;
+            saveSecureState();
+            return
+        }
+        case "set-account-order": {
+            let accInfo = getAccount(msg.accountId);
+            accInfo.order = msg.order;
+            saveSecureState();
+            return
+        }
+        case "remove-account": {
+            if (msg.accountId) {
+                delete secureState.accounts[Network.current][msg.accountId];
+            }
+            //persist
+            saveSecureState();
+            return
+        }
+        case "getNetworkAccountsCount": {
+            return getNetworkAccountsCount()
+        }
+        case "all-address-contacts": {
+            if (!secureState.contacts) {
+                return {};
+            } else {
+                return secureState.contacts[Network.current];
+            }
+        }
+        case "all-network-accounts": {
+            return secureState.accounts[Network.current] || {}
+        }
+        // case "connect": {
+        //   if (!msg.network) msg.network = Network.current;
+        //   return connectToWebPage(msg.accountId, msg.network);
+        // }
 
-    // case "disconnect": {
-    //   return disconnectFromWebPage();
-    // }
-    // case "isConnected": {
-    //   return isConnected();
-    // }
+        // case "disconnect": {
+        //   return disconnectFromWebPage();
+        // }
+        // case "isConnected": {
+        //   return isConnected();
+        // }
 
-    case "get-validators": {
-      //view-call request
-      return unc.getValidators();
-    }
-    case "access-key": {
-      //check access-key exists and get nonce
-      return unc.access_key(msg.accountId, msg.publicKey);
-    }
-    case "query-unc-account": {
-      //check access-key exists and get nonce
-      return unc.queryAccount(msg.accountId);
-    }
-    case "view": {
-      //view-call request
-      return unc.view(msg.contract, msg.method, msg.args);
-    }
-    case "set-address-book": {
-      if (!msg.accountId) throw Error("!msg.accountId");
-      if (!secureState.contacts[Network.current]) secureState.contacts[Network.current] = {};
-      secureState.contacts[Network.current][msg.accountId] = msg.contact;
-      saveSecureState();
-      return
-    }
-    case "remove-address": {
-      delete secureState.contacts[Network.current][msg.accountId];
-      //persist
-      saveSecureState();
-      return
-    }
+        case "get-validators": {
+            //view-call request
+            return unc.getValidators();
+        }
+        case "access-key": {
+            //check access-key exists and get nonce
+            return unc.access_key(msg.accountId, msg.publicKey);
+        }
+        case "query-unc-account": {
+            //check access-key exists and get nonce
+            return unc.queryAccount(msg.accountId);
+        }
+        case "view": {
+            //view-call request
+            return unc.view(msg.contract, msg.method, msg.args);
+        }
+        case "set-address-book": {
+            if (!msg.accountId) throw Error("!msg.accountId");
+            if (!secureState.contacts[Network.current]) secureState.contacts[Network.current] = {};
+            secureState.contacts[Network.current][msg.accountId] = msg.contact;
+            saveSecureState();
+            return
+        }
+        case "remove-address": {
+            delete secureState.contacts[Network.current][msg.accountId];
+            //persist
+            saveSecureState();
+            return
+        }
 
-    // old version - not originated in wallet-connect
-    case "apply": {
-      // apply transaction request from popup
-      // {code:"apply", signerId:<account>, tx:BatchTransaction}
-      // V3: when resolved, extract result, send msg to content-script->page
-      // Note: V4 uses signAndSendTransaction and returns FinalExecutionOutcome (full return data, needs to be parsed to extract results)
-      const signerId = msg.signerId || "...";
-      const accInfo = getAccount(signerId);
-      if (!accInfo.privateKey) throw Error(`Mywallets: account ${signerId} is read-only`);
-      //convert wallet-api actions to unc.TX.Action
-      const actions: TX.Action[] = [];
-      for (let item of msg.tx.items) {
-        //convert action
-        switch (item.action) {
-          case "call":
-            const f = item as FunctionCall;
-            actions.push(
-              TX.functionCall(
-                f.method,
-                f.args,
-                BigInt(f.gas),
-                BigInt(f.attached)
-              )
+        // old version - not originated in wallet-connect
+        case "apply": {
+            // apply transaction request from popup
+            // {code:"apply", signerId:<account>, tx:BatchTransaction}
+            // V3: when resolved, extract result, send msg to content-script->page
+            // Note: V4 uses signAndSendTransaction and returns FinalExecutionOutcome (full return data, needs to be parsed to extract results)
+            const signerId = msg.signerId || "...";
+            const accInfo = getAccount(signerId);
+            if (!accInfo.privateKey) throw Error(`Mywallets: account ${signerId} is read-only`);
+            //convert wallet-api actions to unc.TX.Action
+            const actions: TX.Action[] = [];
+            for (let item of msg.tx.items) {
+                //convert action
+                switch (item.action) {
+                    case "call":
+                        const f = item as FunctionCall;
+                        actions.push(
+                            TX.functionCall(
+                                f.method,
+                                f.args,
+                                BigInt(f.gas),
+                                BigInt(f.attached)
+                            )
+                        );
+                        break;
+                    case "transfer":
+                        actions.push(TX.transfer(BigInt(item.attached)));
+                        break;
+                    case "delete":
+                        const d = item as DeleteAccountToBeneficiary;
+                        actions.push(TX.deleteAccount(d.beneficiaryAccountId));
+                        break;
+                    default:
+                        throw Error("batchTx UNKNOWN item.action=" + item.action);
+                }
+            }
+
+            //returns the Promise required to complete this action
+            return unc.sendTransactionAndParseResult(
+                actions,
+                signerId,
+                msg.tx.receiver,
+                accInfo.privateKey || ""
             );
-            break;
-          case "transfer":
-            actions.push(TX.transfer(BigInt(item.attached)));
-            break;
-          case "delete":
-            const d = item as DeleteAccountToBeneficiary;
-            actions.push(TX.deleteAccount(d.beneficiaryAccountId));
-            break;
-          default:
-            throw Error("batchTx UNKNOWN item.action=" + item.action);
         }
-      }
 
-      //returns the Promise required to complete this action
-      return unc.sendTransactionAndParseResult(
-        actions,
-        signerId,
-        msg.tx.receiver,
-        accInfo.privateKey || ""
-      );
-    }
+        // new v1 - wallet-connect mode
+        // Note: sign-and-send-transaction should return a FinalExecutionOutcome struct
+        case "sign-and-send-transaction": {
+            const accInfo = getAccount(msg.params.signerId);
+            if (!accInfo.privateKey) {
+                console.error(`account ${msg.params.signerId} is read-only`)
+                throw Error(`account ${msg.params.signerId} is read-only`)
+            }
+            const accessKey = await unc.getAccessKey(msg.params.signerId, accInfo.privateKey)
+            return commitActions(accessKey, msg.params, accInfo.privateKey)
+        }
 
-    // new v1 - wallet-connect mode
-    // Note: sign-and-send-transaction should return a FinalExecutionOutcome struct
-    case "sign-and-send-transaction": {
-      const accInfo = getAccount(msg.params.signerId);
-      if (!accInfo.privateKey) {
-        console.error(`account ${msg.params.signerId} is read-only`)
-        throw Error(`account ${msg.params.signerId} is read-only`)
-      }
-      const accessKey = await unc.getAccessKey(msg.params.signerId, accInfo.privateKey)
-      return commitActions(accessKey, msg.params, accInfo.privateKey)
-    }
+        case "sign-and-send-transactions": {
+            if (!msg.params || msg.params.length == 0) throw new Error("Sign and Send Transactions without any message")
+            let promises: Promise<any>[] = []
+            const signerId = msg.params[0].signerId
+            for (let tx of msg.params) {
+                if (tx.signerId != signerId) throw new Error("Sign and Send Transactions with many signerIds")
+            }
+            const accInfo = getAccount(signerId);
+            if (!accInfo.privateKey) {
+                throw Error(`account ${signerId} is read-only`)
+            }
+            const accessKey = await unc.getAccessKey(signerId, accInfo.privateKey)
+            for (let tx of msg.params) {
+                promises.push(commitActions(accessKey, tx, accInfo.privateKey))
+            }
+            return Promise.all(promises)
+        }
 
-    case "sign-and-send-transactions": {
-      if (!msg.params || msg.params.length == 0) throw new Error("Sign and Send Transactions without any message")
-      let promises: Promise<any>[] = []
-      const signerId = msg.params[0].signerId
-      for (let tx of msg.params) {
-        if (tx.signerId != signerId) throw new Error("Sign and Send Transactions with many signerIds")
-      }
-      const accInfo = getAccount(signerId);
-      if (!accInfo.privateKey) {
-        throw Error(`account ${signerId} is read-only`)
-      }
-      const accessKey = await unc.getAccessKey(signerId, accInfo.privateKey)
-      for (let tx of msg.params) {
-        promises.push(commitActions(accessKey, tx, accInfo.privateKey))
-      }
-      return Promise.all(promises)
+        default: {
+            throw Error(`invalid msg.code ${JSON.stringify(msg)}`);
+        }
     }
-
-    default: {
-      throw Error(`invalid msg.code ${JSON.stringify(msg)}`);
-    }
-  }
 }
 
 
@@ -827,13 +862,13 @@ async function getPromiseMsgFromPopup(msg: Record<string, any>): Promise<any> {
 //on extension installed
 //------------------------
 chrome.runtime.onInstalled.addListener(function (details) {
-  log("onInstalled");
+    log("onInstalled");
 
-  if (details.reason == "install") {
-    //call a function to handle a first install
-  } else if (details.reason == "update") {
-    //call a function to handle an update
-  }
+    if (details.reason == "install") {
+        //call a function to handle a first install
+    } else if (details.reason == "update") {
+        //call a function to handle an update
+    }
 });
 
 /**
@@ -1060,13 +1095,13 @@ const UNLOCK_EXPIRED = "unlock-expired";
 //expire alarm
 //------------------------
 chrome.alarms.onAlarm.addListener(function (alarm: any) {
-  //log("chrome.alarms.onAlarm fired ", alarm);
-  if (alarm.name == UNLOCK_EXPIRED) {
-    chrome.alarms.clearAll();
-    lockWallet("chrome.alarms.onAlarm " + JSON.stringify(alarm));
-    //window.close()//unload this background page
-    //chrome.storage.local.remove(["uk", "exp"]) //clear unlock sha
-  }
+    //log("chrome.alarms.onAlarm fired ", alarm);
+    if (alarm.name == UNLOCK_EXPIRED) {
+        chrome.alarms.clearAll();
+        lockWallet("chrome.alarms.onAlarm " + JSON.stringify(alarm));
+        //window.close()//unload this background page
+        //chrome.storage.local.remove(["uk", "exp"]) //clear unlock sha
+    }
 });
 
 // called before processing messages to recover data if this is a new instance
@@ -1074,78 +1109,78 @@ chrome.alarms.onAlarm.addListener(function (alarm: any) {
 // TODO: consider the possibility the user added accounts to the wallet on another tab
 async function tryRetrieveBgInfoFromStorage(): Promise<void> {
 
-  // Always recover first the base unencrypted state, if needed
-  if (stateIsEmpty()) {
-    // recover base state
-    await recoverState();
-    // recover last set network
-    const nw = (await localStorageGet("selectedNetwork")) as string;
-    if (nw) Network.setCurrent(nw);
-  }
+    // Always recover first the base unencrypted state, if needed
+    if (stateIsEmpty()) {
+        // recover base state
+        await recoverState();
+        // recover last set network
+        const nw = (await localStorageGet("selectedNetwork")) as string;
+        if (nw) Network.setCurrent(nw);
+    }
 
-  const locked = isLocked()
-  //log(`locked ${locked} dataVersion ${state.dataVersion} || user ${state.currentUser}`);
-  // validate dataVersion
-  if (!state.dataVersion) {
-    clearState();
-  }
+    const locked = isLocked()
+    //log(`locked ${locked} dataVersion ${state.dataVersion} || user ${state.currentUser}`);
+    // validate dataVersion
+    if (!state.dataVersion) {
+        clearState();
+    }
 
-  // ----------------------------
-  // here we have a base state
-  // ----------------------------
+    // ----------------------------
+    // here we have a base state
+    // ----------------------------
 
-  // if no current user, lock
-  if (!state.currentUser) {
-    lockWallet("no current user");
-    return;
-  }
+    // if no current user, lock
+    if (!state.currentUser) {
+        lockWallet("no current user");
+        return;
+    }
 
-  if (secureStateOpened()) {
-    // it was cached, the service worker is still active
-    log("BK-init secureState already opened, has ", getNetworkAccountsCount(), "accounts")
+    if (secureStateOpened()) {
+        // it was cached, the service worker is still active
+        log("BK-init secureState already opened, has ", getNetworkAccountsCount(), "accounts")
+        // set alarm to lock after x minutes
+        setAutoLockAlarm()
+        return
+    }
+
+    // _connectedTabs = await localStorageGet("_ct");
+    // log("RECOVERED _connectedTabs", _connectedTabs);
+    //@ts-ignore
+    //_connectedTabs = await localStorageGet("_ct");
+
+    const unlockSHA = await getUnlockSHA()
+    //log("RECOVERED UNLOCK SHA", unlockSHA);
+
+    // if no auto-unlock-SHA
+    if (!unlockSHA) {
+        if (!locked) lockWallet("no unlock sha");
+        return;
+    }
+
+    // try auto-unlock
+    //try to recover secure state
+    try {
+        await unlockSecureStateSHA(
+            state.currentUser,
+            unlockSHA
+        );
+    } catch (ex) {
+        log("recovering secure state on retrieveBgInfoFromStorage", ex.message);
+        lockWallet("error decoding secure state");
+        return;
+    }
+
     // set alarm to lock after x minutes
     setAutoLockAlarm()
-    return
-  }
-
-  // _connectedTabs = await localStorageGet("_ct");
-  // log("RECOVERED _connectedTabs", _connectedTabs);
-  //@ts-ignore
-  //_connectedTabs = await localStorageGet("_ct");
-
-  const unlockSHA = await getUnlockSHA()
-  //log("RECOVERED UNLOCK SHA", unlockSHA);
-
-  // if no auto-unlock-SHA
-  if (!unlockSHA) {
-    if (!locked) lockWallet("no unlock sha");
     return;
-  }
-
-  // try auto-unlock
-  //try to recover secure state
-  try {
-    await unlockSecureStateSHA(
-      state.currentUser,
-      unlockSHA
-    );
-  } catch (ex) {
-    log("recovering secure state on retrieveBgInfoFromStorage", ex.message);
-    lockWallet("error decoding secure state");
-    return;
-  }
-
-  // set alarm to lock after x minutes
-  setAutoLockAlarm()
-  return;
 }
 
 function setAutoLockAlarm() {
-  if (secureStateOpened()) {
-    const autoUnlockSeconds = getAutoUnlockSeconds()
-    const unlockExpireTimeStamp = Date.now() + autoUnlockSeconds * 1000;
-    chrome.alarms.create(UNLOCK_EXPIRED, { when: unlockExpireTimeStamp });
-  }
+    if (secureStateOpened()) {
+        const autoUnlockSeconds = getAutoUnlockSeconds()
+        const unlockExpireTimeStamp = Date.now() + autoUnlockSeconds * 1000;
+        chrome.alarms.create(UNLOCK_EXPIRED, {when: unlockExpireTimeStamp});
+    }
 }
 
 
