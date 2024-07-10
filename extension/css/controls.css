@@ -16,10 +16,7 @@
     position: absolute;
     border-style: solid;
     border-width: 1px;
-    border-radius: 15px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    /* padding                   : 5px; */
+    border-radius: 15px 0 0 15px;
     padding-top: 5px;
     text-align: center;
     width: 295px;
@@ -29,18 +26,12 @@
     border-color: var(--InputBorder);
     background-color: var(--ControlBackground);
     color: var(--ControlAltText);
-    margin: 0px 0px;
+    margin: 0 0;
     /* align-self: end; */
     padding-left: 57px;
     font-size: 20px;
     font-weight: 300;
 }
-
-/*.inputboxwithbutton input[type="text"] {
-}
-.inputboxwithbutton input[type="password"] {
-}
-*/
 
 .inputboxwithbutton input[type="text"]:focus {
     outline: none;
@@ -50,8 +41,7 @@
 
 .inputboxwithbutton input[type="password"]:focus {
     outline: none;
-    /*border-color: var(--HighLight);*/
-    border-color: #3EDFCF;
+    border-color: var(--HighLight);
 }
 
 .inputboxwithbutton button {
@@ -337,8 +327,7 @@ a:visited {
     border-style: solid;
     border-width: 1px;
     padding: 15px;
-    margin: auto;
-    margin-bottom: 15px;
+    margin: auto auto 15px;
 }
 
 .form-field-label {

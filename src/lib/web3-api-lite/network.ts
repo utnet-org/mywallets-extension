@@ -12,21 +12,21 @@ export type NetworkInfo = {
     liquidStakingGovToken: string,
 
   }
-  
+
 export const NetworkList:NetworkInfo[] = [
 
-  { name: "mainnet", rootAccount: "", displayName: "Utility Mainnet", color: "green", 
+  { name: "mainnet", rootAccount: "", displayName: "Utility Mainnet", color: "green",
       rpc: "https://unc-test.jongun2038.win/", explorerUrl: "https://explorer.xx.org/", NearWebWalletUrl:"https://wallet.xx.org/",
       liquidStakingContract: "meta-pool.unc", liquidStakingGovToken: "meta-token.unc",
   },
 
-  { name: "testnet", rootAccount: "", displayName: "Utility Testnet", color: "yellow", 
-      rpc: "https://unc-test.jongun2038.win/", explorerUrl: "https://explorer.testnet.xx.org/", NearWebWalletUrl:"https://wallet.testnet.xx.org/", 
+  { name: "testnet", rootAccount: "", displayName: "Utility Testnet", color: "mauve",
+      rpc: "https://unc-test.jongun2038.win/", explorerUrl: "https://explorer.testnet.xx.org/", NearWebWalletUrl:"https://wallet.testnet.xx.org/",
       liquidStakingContract: "meta-v2.pool.testnet", liquidStakingGovToken: "token.meta.pool.testnet",
   },
 
-  { name: "local", rootAccount: "", displayName: "Local Network", color: "red", 
-    rpc: "http://127.0.0.1:3030", explorerUrl: "http://127.0.0.1/explorer/", NearWebWalletUrl:"http://127.0..0.1/wallet/",  
+  { name: "local", rootAccount: "", displayName: "Local Network", color: "red",
+    rpc: "http://127.0.0.1:3030", explorerUrl: "http://127.0.0.1/explorer/", NearWebWalletUrl:"http://127.0..0.1/wallet/",
     liquidStakingContract: "meta.pool.local", liquidStakingGovToken: "token.meta.pool.local",
   },
 ];

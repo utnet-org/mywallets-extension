@@ -29,24 +29,24 @@ body {
 
 	--Background: rgb(243 243 243);
 
-	--Block: rgb(0, 132, 172);
+	--Block: #89d1cd;
 
 	--BlockText: rgb(0, 18, 44);
 
 	--TextColor: rgb(0, 18, 44);
 
-	--TextRemark: rgb(2, 25, 54);
+	--TextRemark: black;
 
-	--TextGeneric: rgb(6, 31, 68);
+	--TextGeneric: #151C1A;
 
 	/*--HoverColor:rgb(255, 238, 4); /* color de hover en las lists */
 
 	--HoverColor: rgb(201 235 255);
 
-	--HighLight: rgb(255, 196, 0);
+	--HighLight: #3EDFCF;
 	/* color para important texts */
 
-	--ControlBackground: rgb(147, 215, 255);
+	--ControlBackground: #F6F9F9;
 
 	--ControlText: rgb(255, 255, 255);
 
@@ -55,8 +55,8 @@ body {
 	--ControlAccent: rgb(110 182 193);
 	/*#endregion */
 
-	--ButtonBorder: rgb(189, 139, 1);
-	--InputBorder : rgb(189, 139, 1);
+	--ButtonBorder: #3EDFCF;
+	--InputBorder : #3EDFCF;
 
 }
 

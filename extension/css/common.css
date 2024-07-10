@@ -4,27 +4,25 @@
 h2 {
   color      : var(--TextRemark);
   font-size  : 28px;
-  font-weight: 400;
+  font-weight: 500;
   display    : block;
   width      : 400px;
   height     : auto;
   word-wrap  : break-word;
   margin     : auto;
   padding    : 5px;
-
 }
 
 h3 {
-  /*color      : var(--TextGeneric);*/
-  color      : #3EDFCF;
-  font-size: 17px;
-  font-weight: 200;
+  color      : var(--TextGeneric);
+  font-size  : 15px;
+  font-weight: 400;
   display    : block;
   width      : 400px;
   height     : auto;
   word-wrap  : break-word;
   margin     : auto;
-  padding: 8px 1px 0px;
+  padding: 8px 1px 0;
   line-height: 1.25em;
 }
 
@@ -95,8 +93,7 @@ h5 {
   background-image   : url(../icons/logo.svg);
   background-repeat  : no-repeat;
   background-position: center;
-  margin             : 1px;
-  margin-top         : 15px;
+  margin: 15px 1px 1px;
 }
 
 /* Top Bar ------------------------------------------------------------------------*/

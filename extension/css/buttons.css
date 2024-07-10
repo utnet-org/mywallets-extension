@@ -36,8 +36,7 @@
   text-align           : center;
   border-style         : none;
   border-radius        : 5px;
-  padding              : 0px;
-  padding-top          : 33px;
+  padding              : 33px 0 0;
   background-size      : 30px;
   background-position-x: center;
   background-color     : transparent;
@@ -215,7 +214,8 @@
 }
 
 .unlocked {
-  background-image: url("../icons/SVG/lock_dark.svg");
+  /*background-image: url("../icons/SVG/lock_dark.svg");*/
+  background-image: url("../icons/SVG/lock_unc.svg");
 }
 
 .connect {

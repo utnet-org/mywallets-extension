@@ -122,13 +122,13 @@ aside>nav>li>svg {
   width: 14px;
 }
 
-/* more-than 640px 
+/* more-than 640px
 @media (min-width: 640px) {
     .open {
         left: 400px;
     }
 }
- more-than 1200px 
+ more-than 1200px
 @media (min-width: 1200px) {
     .open {
         left: 600px;
@@ -144,7 +144,7 @@ aside .logo-128 {
   z-index : 94;
 }
 
-/* 
+/*
 ----------------------
 NETWORK selection drop-down
 ----------------------
@@ -205,7 +205,8 @@ li#current-network-display-name {
 }
 
 .circle.cyan:before {
-  background-color: #388585;
+  /*background-color: #388585;*/
+  background-color: #89d1cd;
 }
 
 .circle.yellow:before {
@@ -218,6 +219,14 @@ li#current-network-display-name {
 
 .circle.red:before {
   background-color: #913e3eb5;
+}
+
+.circle.offwhite:before {
+  background-color: #f3efe8;
+}
+
+.circle.mauve:before {
+  background-color: #dbd8ec;
 }
 
 .networks-list-box {
