@@ -221,8 +221,8 @@ li#current-network-display-name {
   background-color: #913e3eb5;
 }
 
-.circle.offwhite:before {
-  background-color: #f3efe8;
+.circle.blue:before {
+  background-color: #3188b2;
 }
 
 .circle.mauve:before {
@@ -296,7 +296,7 @@ li#current-network-display-name {
 .combo-list-box {
   position: absolute;
   opacity : 0;
-  top     : 700;
+  top     : 700px;
   left    : 20px;
   right   : 20px;
 }

@@ -564,10 +564,15 @@ function updateAccountHeaderDOM() {
   }
 
 }
-
+function truncateText(text: string, frontChars: number, endChars: number) {
+  if (text.length > frontChars + endChars) {
+    return text.slice(frontChars) + '...' + text.slice(text.length - endChars);
+  }
+  return text;
+}
 // re-renders SelectedAccountHeader
 function renderSelectedAccountHeader() {
-
+  // const truncatedName = truncateText(selectedAccountData.name, 10, 10);
   const SELECTED_ACCOUNT = "selected-account";
   const TEMPLATE = `
     <div>
@@ -593,7 +598,6 @@ function renderSelectedAccountHeader() {
     selectedAccountData
   );
   updateAccountHeaderDOM();
-
 }
 
 
@@ -1916,7 +1920,7 @@ export function removePrivateKeyClicked(ev: Event) {
 async function removeAccountClicked(ev: Event) {
   try {
     if (selectedAccountData.isFullAccess) {
-      // has full access - remove access and then the account 
+      // has full access - remove access and then the account
       localGlobalAlsoRemoveAccount = true;
       startProcessRemovePrivKey();
     }

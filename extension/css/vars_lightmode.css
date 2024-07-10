@@ -38,17 +38,20 @@ body {
 	--TextRemark: black;
 
 	--TextGeneric: #151C1A;
+	/*--TextGeneric: #4894b9;*/
 
 	/*--HoverColor:rgb(255, 238, 4); /* color de hover en las lists */
 
-	--HoverColor: rgb(201 235 255);
+	/*--HoverColor: rgb(201 235 255);*/
+	--HoverColor: #95d5d1;
 
 	--HighLight: #3EDFCF;
 	/* color para important texts */
 
 	--ControlBackground: #F6F9F9;
 
-	--ControlText: rgb(255, 255, 255);
+	/*--ControlText: rgb(255, 255, 255);*/
+	--ControlText: black;
 
 	--ControlAltText: rgb(0, 0, 0);
 

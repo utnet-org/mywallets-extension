@@ -42,6 +42,23 @@
   background-color     : transparent;
 }
 
+.mid-button {
+  width                : 60px;
+  height               : 48px;
+  display              : block;
+  margin               : 2px;
+  background-repeat    : no-repeat;
+  color                : black;
+  font-size            : 12px;
+  text-align           : center;
+  border-style         : none;
+  border-radius        : 5px;
+  background-color     : transparent;
+  padding: 36px 0 0;
+  background-size      : 30px;
+  background-position-x: center;
+}
+
 .morepage {
   position     : relative;
   width        : 456px;
@@ -186,7 +203,7 @@
 /*buttons that appear in dark background*/
 
 .receive {
-  background-image: url("../icons/SVG/receive_dark.svg");
+  background-image: url("../icons/SVG/receive_unc.svg");
 }
 
 .unlock {
@@ -194,7 +211,8 @@
 }
 
 .send {
-  background-image: url("../icons/SVG/send_dark.svg");
+  /*background-image: url("../icons/SVG/send_dark.svg");*/
+  background-image: url("../icons/SVG/send_unc.svg");
 }
 
 .removeAddress {
@@ -202,11 +220,13 @@
 }
 
 .stake {
-  background-image: url("../icons/SVG/stake_dark.svg");
+  /*background-image: url("../icons/SVG/stake_dark.svg");*/
+  background-image: url("../icons/SVG/stake_unc.svg");
 }
 
 .add {
-  background-image: url("../icons/SVG/plus_dark.svg");
+  /*background-image: url("../icons/SVG/plus_dark.svg");*/
+  background-image: url("../icons/SVG/token_unc.svg");
 }
 
 .addaccount {

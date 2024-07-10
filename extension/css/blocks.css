@@ -34,15 +34,14 @@
   overflow-y: hidden;
 }
 
-.MidBlock {
+.midblock {
   position: absolute;
   top: 153px;
   left: 9px;
   width: 457px;
-  padding: 0px;
   height: 57px;
-  margin: 0px;
-  padding-top: 5px;
+  margin: 0;
+  padding: 5px 0 0;
   display: inline-flex;
   justify-content: center;
   background: var(--Block);
@@ -50,10 +49,26 @@
   border-radius: 8px;
 }
 
+.middle-block {
+  position: absolute;
+  top: 153px;
+  left: 9px;
+  width: 457px;
+  height: 57px;
+  margin: 0;
+  padding: 5px 0 0;
+  display: inline-flex;
+  justify-content: space-evenly;
+  /*background: var(--Block);*/
+  background: transparent;
+  overflow-y: hidden;
+  border-radius: 8px;
+}
+
 .subpage {
   position: absolute;
   top: 210px;
-  left: 0px;
+  left: 0;
   width: 470;
   height: 320px;
   margin: 5px;
@@ -71,6 +86,15 @@
   padding-top: 10px;
   text-align: center;
   display: flexbox;
+  background-color: transparent;
+}
+
+.con-area {
+  position: relative;
+  width: 100%;
+  height: auto;
+  padding: 10px 0 0;
+  text-align: left;
   background-color: transparent;
 }
 
@@ -127,19 +151,18 @@
   /* margin          : auto; */
   color: var(--BlockText);
   background-color: var(--Block);
-  height: 44px;
-  width: 405px;
+  height: 40px;
+  /*width: 405px;*/
   overflow-wrap: break-word;
   word-break: break-word;
   white-space: initial;
+  /*white-space: nowrap; !* 防止文本换行 *!*/
+  /*text-overflow: ellipsis; !* 显示省略号 *!*/
   overflow: hidden;
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 200;
   border-radius: 6px 6px 0 0;
-  padding-left: 35px;
-  padding-right: 30px;
-  padding-top: 7px;
-  padding-bottom: 7px;
+  padding: 17px 30px 7px 35px;
   margin-left: 5px;
   margin-right: 5px;
 }
@@ -149,12 +172,21 @@
 }
 
 .accountdetscuenta:before {
-  content: "▽";
-  font-size: 9pt;
+  /*content: "▽";*/
+  content: "⇄";
+  font-size: 10pt;
   position: absolute;
   left: 15px;
   top: 10px;
 }
+
+/*.accountdetscuenta:after {*/
+/*  content: "⧉";*/
+/*  font-size: 15pt;*/
+/*  position: absolute;*/
+/*  right: 15px;*/
+/*  top: 10px;*/
+/*}*/
 
 .accountdetscomment {
   /* display      : block; */
